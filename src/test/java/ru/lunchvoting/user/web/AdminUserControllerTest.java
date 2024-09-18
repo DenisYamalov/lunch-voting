@@ -76,8 +76,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void enableNotFound() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + NOT_FOUND)
-                .param("enabled", "false")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .param("enabled", "false")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -102,8 +102,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
         User updated = getUpdated();
         updated.setId(null);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(updated, "newPass")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWithPassword(updated, "newPass")))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -115,8 +115,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     void createWithLocation() throws Exception {
         User newUser = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(newUser, "newPass")))
+                                               .contentType(MediaType.APPLICATION_JSON)
+                                               .content(jsonWithPassword(newUser, "newPass")))
                 .andExpect(status().isCreated());
 
         User created = USER_MATCHER.readFromJson(action);
@@ -139,8 +139,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void enable() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + USER_ID)
-                .param("enabled", "false")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .param("enabled", "false")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -149,21 +149,11 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getWithMeals() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + ADMIN_ID + "/with-meals"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_WITH_MEALS_MATCHER.contentJson(admin));
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
         User invalid = new User(null, null, "", "newPass", 7300, Role.USER, Role.ADMIN);
         perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(invalid, "newPass")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWithPassword(invalid, "newPass")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -174,8 +164,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
         User invalid = new User(user);
         invalid.setName("");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(invalid, "password")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWithPassword(invalid, "password")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -186,8 +176,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
         User updated = new User(user);
         updated.setName("<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(updated, "password")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWithPassword(updated, "password")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -198,8 +188,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
         User updated = new User(user);
         updated.setEmail(ADMIN_MAIL);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(updated, "password")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWithPassword(updated, "password")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString(EXCEPTION_DUPLICATE_EMAIL)));
@@ -210,8 +200,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     void createDuplicate() throws Exception {
         User expected = new User(null, "New", USER_MAIL, "newPass", 2300, Role.USER, Role.ADMIN);
         perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(expected, "newPass")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWithPassword(expected, "newPass")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString(EXCEPTION_DUPLICATE_EMAIL)));
