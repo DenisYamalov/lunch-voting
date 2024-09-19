@@ -29,6 +29,10 @@ spring:
     #    tcp: jdbc:h2:tcp://localhost:9092/~/lunchvoting
     username: sa
     password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
   # Jackson Serialization Issue Resolver
   jackson.visibility:
