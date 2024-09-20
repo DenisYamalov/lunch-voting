@@ -35,7 +35,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin));
+                .andExpect(USER_MATCHER.contentJson(ADMIN));
     }
 
     @Test
@@ -49,10 +49,10 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getByEmail() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-email?email=" + admin.getEmail()))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-email?email=" + ADMIN.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin));
+                .andExpect(USER_MATCHER.contentJson(ADMIN));
     }
 
     @Test
@@ -132,7 +132,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin, guest, user));
+                .andExpect(USER_MATCHER.contentJson(ADMIN, GUEST, USER));
     }
 
     @Test
@@ -161,7 +161,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        User invalid = new User(user);
+        User invalid = new User(USER);
         invalid.setName("");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -173,7 +173,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateHtmlUnsafe() throws Exception {
-        User updated = new User(user);
+        User updated = new User(USER);
         updated.setName("<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -185,7 +185,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        User updated = new User(user);
+        User updated = new User(USER);
         updated.setEmail(ADMIN_MAIL);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_ID)
                         .contentType(MediaType.APPLICATION_JSON)

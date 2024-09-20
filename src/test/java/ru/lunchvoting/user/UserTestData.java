@@ -21,9 +21,9 @@ public class UserTestData {
     public static final String ADMIN_MAIL = "admin@gmail.com";
     public static final String GUEST_MAIL = "guest@gmail.com";
 
-    public static final User user = new User(USER_ID, "User", USER_MAIL, "password", Role.USER);
-    public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN, Role.USER);
-    public static final User guest = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest");
+    public static final User USER = new User(USER_ID, "User", USER_MAIL, "password", Role.USER);
+    public static final User ADMIN = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN, Role.USER);
+    public static final User GUEST = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest");
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.USER));
