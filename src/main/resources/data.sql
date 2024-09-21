@@ -1,7 +1,6 @@
 INSERT INTO users (name, email, password)
 VALUES ('User', 'user@yandex.ru', '{noop}password'),
-       ('Admin', 'admin@gmail.com', '{noop}admin'),
-       ('Guest', 'guest@gmail.com', '{noop}guest');
+       ('Admin', 'admin@gmail.com', '{noop}admin');
 
 INSERT INTO user_role (role, user_id)
 VALUES ('USER', 1),
@@ -23,5 +22,4 @@ VALUES ('Hamburger', 100, 1),
 
 INSERT INTO vote (user_id, restaurant_id, date_time)
 VALUES (1, 1, CURRENT_TIMESTAMP(0)),
-       (2, 2, CURRENT_TIMESTAMP(0)),
-       (3, 2, CURRENT_TIMESTAMP(0));
+       (2, 2, CURRENT_TIMESTAMP(0));

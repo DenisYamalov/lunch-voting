@@ -3,9 +3,11 @@ package ru.lunchvoting.user.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import ru.lunchvoting.common.model.NamedEntity;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "dish")
@@ -19,8 +21,13 @@ public class Dish extends NamedEntity {
      */
     @Column(name = "price", nullable = false)
     @NotNull
-    @Size(min = 1)
+    @Range(min = 1)
     private Long price;
+
+    //To save history
+    @Column(name = "menu_date", nullable = false, columnDefinition = "date default now()")
+    @NotNull
+    private LocalDate menuDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
@@ -32,5 +39,11 @@ public class Dish extends NamedEntity {
         super(id, name);
         this.restaurant = restaurant;
         this.price = price;
+    }
+
+    public Dish(String name, Long price, Restaurant restaurant) {
+        super(null, name);
+        this.price = price;
+        this.restaurant = restaurant;
     }
 }
