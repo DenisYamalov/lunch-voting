@@ -22,6 +22,6 @@ VALUES ('Hamburger', 100, 1),
        ('Bacon King', 200, 3);
 
 INSERT INTO vote (user_id, restaurant_id, date_time)
-VALUES (1, 1, '2024-01-01 12:00:00'),
-       (2, 2, '2024-01-01 12:00:00'),
-       (3, 2, '2024-01-01 12:00:00');
+VALUES (1, 1, CURRENT_TIMESTAMP(0)),
+       (2, 2, CURRENT_TIMESTAMP(0)),
+       (3, 2, CURRENT_TIMESTAMP(0));
