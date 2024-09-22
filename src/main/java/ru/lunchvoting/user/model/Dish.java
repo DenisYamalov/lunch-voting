@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"restaurant"})
+@AllArgsConstructor
 public class Dish extends NamedEntity {
     /**
      * price in cents
@@ -32,18 +33,13 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonIgnore
-    @NotNull
+//    @NotNull
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, Restaurant restaurant, Long price) {
         super(id, name);
         this.restaurant = restaurant;
         this.price = price;
-    }
-
-    public Dish(String name, Long price, Restaurant restaurant) {
-        super(null, name);
-        this.price = price;
-        this.restaurant = restaurant;
+        this.menuDate = LocalDate.now();
     }
 }
