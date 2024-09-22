@@ -30,4 +30,12 @@ public class DishTestData {
     public static final Dish MCCHICKEN = new Dish(MCCHICKEN_ID, MCCHICKEN_NAME, MCDONALDS, 100L);
     public static final Dish WHOPPER = new Dish(WHOPPER_ID, WHOPPER_NAME, BURGERKING, 150L);
     public static final Dish BACONKING = new Dish(BACONKING_ID, BACONKING_NAME, BURGERKING, 200L);
+
+    public static Dish getNew() {
+        return new Dish(null, "New dish", KFC, 100L);
+    }
+
+    public static Dish getUpdated() {
+        return new Dish(HAMBURGER_ID, "Updated Hamburger", KFC, 123L);
+    }
 }

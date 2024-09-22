@@ -5,10 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.lunchvoting.user.model.Dish;
 import ru.lunchvoting.user.repository.DishRepository;
 import ru.lunchvoting.user.repository.RestaurantRepository;
+
+import java.net.URI;
 
 import static ru.lunchvoting.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.lunchvoting.common.validation.ValidationUtil.checkNew;
@@ -25,11 +29,15 @@ public class DishAdminController {
     RestaurantRepository restaurantRepository;
 
     @PostMapping
-    public void create(@PathVariable int restaurantId, @RequestBody Dish dish) {
+    public ResponseEntity<Dish> create(@PathVariable int restaurantId, @RequestBody Dish dish) {
         log.info("create {} for restaurant id = {}", dish, restaurantId);
         checkNew(dish);
         dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
-        dishRepository.save(dish);
+        Dish created = dishRepository.save(dish);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(DISH_ADMIN_URL + "/{id}")
+                .buildAndExpand(restaurantId, created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @DeleteMapping("/{id}")

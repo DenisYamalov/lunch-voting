@@ -2,6 +2,7 @@ package ru.lunchvoting.user.web;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class RestaurantController {
     //TODO count db queries
     @GetMapping
     public List<Restaurant> getAll() {
-        return restaurantRepository.findAll();
+        return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @GetMapping("/{id}")

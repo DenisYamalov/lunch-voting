@@ -18,4 +18,12 @@ public class RestaurantTestData {
     public static final Restaurant KFC = new Restaurant(KFC_ID, KFC_NAME);
     public static final Restaurant MCDONALDS = new Restaurant(MCDONALDS_ID, MCDONALDS_NAME);
     public static final Restaurant BURGERKING = new Restaurant(BURGERKING_ID, BURGERKING_NAME);
+
+    public static Restaurant getNew() {
+        return new Restaurant(null, "New restaurant");
+    }
+
+    public static Restaurant getUpdated() {
+        return new Restaurant(MCDONALDS_ID, "Updated McDonald's");
+    }
 }
