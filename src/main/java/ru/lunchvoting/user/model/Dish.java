@@ -1,6 +1,7 @@
 package ru.lunchvoting.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -26,6 +27,7 @@ public class Dish extends NamedEntity {
     private Long price;
 
     //To save history
+    @Schema(hidden = true)
     @Column(name = "menu_date", nullable = false, columnDefinition = "date default now()")
     @NotNull
     private LocalDate menuDate;

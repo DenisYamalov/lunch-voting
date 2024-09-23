@@ -18,6 +18,6 @@ public class DateTimeUtil {
     }
 
     public static LocalDateTime atStartOfNextDayOrMax(LocalDate localDate) {
-        return localDate != null ? localDate.plus(1, ChronoUnit.DAYS).atStartOfDay() : MAX_DATE;
+        return localDate != null ? localDate.plusDays(1).atStartOfDay() : MAX_DATE;
     }
 }

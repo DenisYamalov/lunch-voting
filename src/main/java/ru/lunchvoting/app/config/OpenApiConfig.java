@@ -22,13 +22,12 @@ import org.springframework.context.annotation.Configuration;
                 title = "REST API documentation",
                 version = "1.0",
                 description = """
-                        Spring Boot migration for <a href='https://javaops.ru/view/topjava'>TopJava application</a> 
                         <p><b>Тестовые креденшелы:</b><br>
                         - user@yandex.ru / password<br>
                         - admin@gmail.com / admin<br>
                         - guest@gmail.com / guest</p>
                         """,
-                contact = @Contact(url = "https://javaops.ru/#contacts", name = "Grigory Kislin", email = "admin@javaops.ru")
+                contact = @Contact(url = "https://t.me/DenisYamalov", name = "Denis Yamalov", email = "nokiden91@gmail.ru")
         ),
         security = @SecurityRequirement(name = "basicAuth")
 )
