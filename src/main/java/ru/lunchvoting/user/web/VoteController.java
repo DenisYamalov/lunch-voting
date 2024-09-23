@@ -14,6 +14,7 @@ import ru.lunchvoting.user.repository.RestaurantRepository;
 import ru.lunchvoting.user.repository.VoteRepository;
 import ru.lunchvoting.user.to.VoteResult;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ public class VoteController {
 
     VoteRepository repository;
     RestaurantRepository restaurantRepository;
+    private final Clock clock;
 
     @GetMapping
     public List<VoteResult> getVoteResults(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -39,8 +41,8 @@ public class VoteController {
     @PostMapping("/{id}")
     public void vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("user id = {} voting for restaurant id = {}", authUser.id(), id);
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDate today = LocalDate.now(clock);
         Optional<Vote> todayVote = repository.findByUserIdAndDateTimeAfter(authUser.id(), today.atStartOfDay());
         Vote vote;
 
