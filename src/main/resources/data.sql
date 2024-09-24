@@ -20,6 +20,6 @@ VALUES ('Hamburger', 100, 1),
        ('Whopper', 150, 3),
        ('Bacon King', 200, 3);
 
-INSERT INTO vote (user_id, restaurant_id, date_time)
-VALUES (1, 1, CURRENT_TIMESTAMP(0)),
-       (2, 2, CURRENT_TIMESTAMP(0));
+INSERT INTO vote (user_id, restaurant_id, vote_date)
+VALUES (1, 1, CURRENT_DATE()),
+       (2, 2, CURRENT_DATE());

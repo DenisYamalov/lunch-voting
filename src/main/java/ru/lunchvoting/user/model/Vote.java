@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ru.lunchvoting.common.model.BaseEntity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "vote")
@@ -24,14 +24,14 @@ public class Vote extends BaseEntity {
     @NotNull
     private Restaurant restaurant;
 
-    @Column(name = "date_time", nullable = false)
+    @Column(name = "vote_date", nullable = false)
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDate voteDate;
 
-    public Vote(Integer id, User user, Restaurant restaurant, LocalDateTime dateTime) {
+    public Vote(Integer id, User user, Restaurant restaurant, LocalDate voteDate) {
         super(id);
         this.user = user;
         this.restaurant = restaurant;
-        this.dateTime = dateTime;
+        this.voteDate = voteDate;
     }
 }

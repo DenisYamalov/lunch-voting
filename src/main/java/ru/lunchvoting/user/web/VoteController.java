@@ -66,14 +66,14 @@ public class VoteController {
         Vote vote;
 
         if (now.isBefore(today.atTime(11, 0))) {
-            Optional<Vote> todayVote = repository.findByUserIdAndDateTimeAfter(authUser.id(), today.atStartOfDay());
+            Optional<Vote> todayVote = repository.findByUserIdAndVoteDate(authUser.id(), today);
 
             if (todayVote.isPresent()) {
                 vote = todayVote.get();
                 vote.setRestaurant(restaurantRepository.getExisted(id));
-                vote.setDateTime(now);
+                vote.setVoteDate(today);
             } else {
-                vote = new Vote(null, authUser.getUser(), restaurantRepository.getExisted(id), LocalDateTime.now());
+                vote = new Vote(null, authUser.getUser(), restaurantRepository.getExisted(id), today);
             }
         } else {
             throw new IllegalRequestDataException("it is too late, vote can't be done after 11:00");
