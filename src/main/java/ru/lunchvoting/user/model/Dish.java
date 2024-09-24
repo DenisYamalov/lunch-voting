@@ -35,7 +35,6 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonIgnore
-//    @NotNull
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, Restaurant restaurant, Long price) {

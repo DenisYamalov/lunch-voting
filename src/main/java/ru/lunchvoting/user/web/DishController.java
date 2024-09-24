@@ -29,7 +29,7 @@ public class DishController {
     RestaurantRepository restaurantRepository;
 
     @PostMapping
-    public ResponseEntity<Dish> create(@PathVariable int restaurantId, @RequestBody Dish dish) {
+    public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         log.info("create {} for restaurant id = {}", dish, restaurantId);
         checkNew(dish);
         dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
