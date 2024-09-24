@@ -32,8 +32,6 @@ public class VoteController {
     private final Clock clock;
 
     /**
-     *
-     * @param authUser
      * @return restaurant id
      */
     @GetMapping
