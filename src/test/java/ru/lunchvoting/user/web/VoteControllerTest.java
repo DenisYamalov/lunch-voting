@@ -48,12 +48,12 @@ class VoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void getVoteResults() throws Exception {
         perform(MockMvcRequestBuilders.get(VOTE_URL + "/results")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("date", LocalDate.now().toString()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("date", LocalDate.now().toString()))
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(VOTE_RESULT_MATCHER.contentJson(List.of(VOTE_KFC_RESULT, VOTE_MCDONALDS_RESULT)));
+                .andExpect(VOTE_RESULT_MATCHER.contentJson(List.of(VOTE_MCDONALDS_RESULT, VOTE_KFC_RESULT)));
     }
 
     @Test
@@ -61,7 +61,7 @@ class VoteControllerTest extends AbstractControllerTest {
     void vote() throws Exception {
         Clock fixedClock =
                 Clock.fixed(Instant.parse(LocalDate.now().atTime(10, 0).toInstant(ZoneOffset.of("Z")).toString()),
-                        ZoneId.of("UTC"));
+                            ZoneId.of("UTC"));
         when(clock.instant()).thenReturn(fixedClock.instant());
         when(clock.getZone()).thenReturn(fixedClock.getZone());
         perform(MockMvcRequestBuilders.post(VOTE_URL_SLASH + KFC_ID))
@@ -74,7 +74,7 @@ class VoteControllerTest extends AbstractControllerTest {
     void updateVote() throws Exception {
         Clock fixedClock =
                 Clock.fixed(Instant.parse(LocalDate.now().atTime(10, 55).toInstant(ZoneOffset.of("Z")).toString()),
-                        ZoneId.of("UTC"));
+                            ZoneId.of("UTC"));
         when(clock.instant()).thenReturn(fixedClock.instant());
         when(clock.getZone()).thenReturn(fixedClock.getZone());
         perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
@@ -89,7 +89,7 @@ class VoteControllerTest extends AbstractControllerTest {
     void updateVoteLate() throws Exception {
         Clock fixedClock =
                 Clock.fixed(Instant.parse(LocalDate.now().atTime(12, 0).toInstant(ZoneOffset.of("Z")).toString()),
-                        ZoneId.of("UTC"));
+                            ZoneId.of("UTC"));
         when(clock.instant()).thenReturn(fixedClock.instant());
         when(clock.getZone()).thenReturn(fixedClock.getZone());
         perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
