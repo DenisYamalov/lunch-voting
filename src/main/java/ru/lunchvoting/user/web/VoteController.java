@@ -31,7 +31,17 @@ public class VoteController {
     RestaurantRepository restaurantRepository;
     private final Clock clock;
 
+    /**
+     *
+     * @param authUser
+     * @return restaurant id
+     */
     @GetMapping
+    public int getVote(@AuthenticationPrincipal AuthUser authUser) {
+        return repository.getExisted(authUser.id()).getRestaurant().getId();
+    }
+
+    @GetMapping("/results")
     public List<VoteResult> getVoteResults(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<VoteResult> results = repository.getResults(date);
         log.info("get vote results = {}", results);
@@ -41,12 +51,23 @@ public class VoteController {
     @PostMapping("/{id}")
     public void vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("user id = {} voting for restaurant id = {}", authUser.id(), id);
+        save(authUser, id);
+    }
+
+    @PutMapping("/{id}")
+    public void updateVote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        log.info("user id = {} updating vote for restaurant id = {}", authUser.id(), id);
+        save(authUser, id);
+    }
+
+    private void save(AuthUser authUser, int id) {
         LocalDateTime now = LocalDateTime.now(clock);
-        LocalDate today = LocalDate.now(clock);
-        Optional<Vote> todayVote = repository.findByUserIdAndDateTimeAfter(authUser.id(), today.atStartOfDay());
+        LocalDate today = now.toLocalDate();
         Vote vote;
 
         if (now.isBefore(today.atTime(11, 0))) {
+            Optional<Vote> todayVote = repository.findByUserIdAndDateTimeAfter(authUser.id(), today.atStartOfDay());
+
             if (todayVote.isPresent()) {
                 vote = todayVote.get();
                 vote.setRestaurant(restaurantRepository.getExisted(id));
