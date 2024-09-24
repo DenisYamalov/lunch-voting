@@ -1,5 +1,6 @@
 package ru.lunchvoting.user.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,11 +36,15 @@ public class VoteController {
      * @return restaurant id
      */
     @GetMapping
+    @Operation(summary = "Get vote",
+            description = "Get voted restaurant id")
     public int getVote(@AuthenticationPrincipal AuthUser authUser) {
         return repository.getExisted(authUser.id()).getRestaurant().getId();
     }
 
     @GetMapping("/results")
+    @Operation(summary = "Get vote results",
+            description = "Get vote count for each restaurant on specified date")
     public List<VoteResult> getVoteResults(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<VoteResult> results = repository.getResults(date);
         log.info("get vote results = {}", results);
@@ -47,12 +52,16 @@ public class VoteController {
     }
 
     @PostMapping("/{id}")
+    @Operation(summary = "Vote for restaurant",
+            description = "Vote for specified restaurant by id")
     public void vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("user id = {} voting for restaurant id = {}", authUser.id(), id);
         save(authUser, id);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update vote",
+            description = "Update vote for specified restaurant by id")
     public void updateVote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("user id = {} updating vote for restaurant id = {}", authUser.id(), id);
         save(authUser, id);

@@ -1,5 +1,6 @@
 package ru.lunchvoting.user.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,8 @@ public class DishAdminController {
     RestaurantRepository restaurantRepository;
 
     @PostMapping
+    @Operation(summary = "Create dish",
+            description = "Create new dish for restaurant with specified id")
     public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         log.info("create {} for restaurant id = {}", dish, restaurantId);
         checkNew(dish);
@@ -42,6 +45,8 @@ public class DishAdminController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete dish",
+            description = "Delete dish with specified id for restaurant with specified id")
     public void delete(@PathVariable int id, @PathVariable int restaurantId) {
         log.info("delete {} for restaurant id = {}", id, restaurantId);
         dishRepository.getBelonged(restaurantId, id);
@@ -50,6 +55,8 @@ public class DishAdminController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Update dish",
+            description = "Update dish with specified id for restaurant with specified id")
     public void update(@Valid @RequestBody Dish dish, @PathVariable int id, @PathVariable int restaurantId) {
         log.info("update {} for restaurant id = {}", dish, restaurantId);
         assureIdConsistent(dish, id);

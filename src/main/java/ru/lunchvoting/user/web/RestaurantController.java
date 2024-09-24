@@ -1,5 +1,6 @@
 package ru.lunchvoting.user.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -24,11 +25,14 @@ public class RestaurantController {
 
     //TODO count db queries
     @GetMapping
+    @Operation(summary = "Get list of restaurants")
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get restaurant",
+            description = "Get restaurant by id")
     public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
         return restaurantRepository.getExisted(id);

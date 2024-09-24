@@ -1,5 +1,6 @@
 package ru.lunchvoting.user.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -24,11 +25,15 @@ public class DishController {
     DishRepository dishRepository;
 
     @GetMapping
+    @Operation(summary = "Get dishes",
+            description = "Get list of dishes for specified restaurant")
     public List<Dish> getAll(@PathVariable int restaurantId) {
         return dishRepository.getAllByRestaurantIdAndMenuDate(restaurantId, LocalDate.now());
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get dish",
+            description = "Get dish by id for specified restaurant")
     public Dish get(@PathVariable int restaurantId, @PathVariable int id) {
         return dishRepository.getBelonged(restaurantId, id);
     }
