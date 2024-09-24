@@ -15,6 +15,8 @@ import ru.lunchvoting.user.DishTestData;
 import ru.lunchvoting.user.model.Dish;
 import ru.lunchvoting.user.repository.DishRepository;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +28,7 @@ import static ru.lunchvoting.user.UserTestData.USER_MAIL;
 import static ru.lunchvoting.user.web.RestaurantAdminController.RESTAURANT_ADMIN_URL;
 
 @Slf4j
-class DishAdminControllerTest extends AbstractControllerTest {
+class DishControllerTest extends AbstractControllerTest {
 
     private static final String KFC_URL = RESTAURANT_ADMIN_URL + "/" + KFC_ID + "/dishes";
     private static final String KFC_URL_SLASH = KFC_URL + "/";
@@ -39,7 +41,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(KFC_URL_SLASH + HAMBURGER_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(repository.findById(HAMBURGER_ID).isPresent());
+        Optional<Dish> optionalDish = repository.findById(HAMBURGER_ID);
+        assertFalse(optionalDish.isPresent());
     }
 
     @Test

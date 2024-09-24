@@ -18,10 +18,10 @@ import static ru.lunchvoting.common.validation.ValidationUtil.assureIdConsistent
 import static ru.lunchvoting.common.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = DishAdminController.DISH_ADMIN_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = DishController.DISH_ADMIN_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class DishAdminController {
+public class DishController {
 
     static final String DISH_ADMIN_URL = RestaurantAdminController.RESTAURANT_ADMIN_URL + "/{restaurantId}/dishes";
 
@@ -44,8 +44,8 @@ public class DishAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id, @PathVariable int restaurantId) {
         log.info("delete {} for restaurant id = {}", id, restaurantId);
-        Dish dish = dishRepository.getBelonged(restaurantId, id);
-        dishRepository.delete(dish);
+        dishRepository.getBelonged(restaurantId, id);
+        dishRepository.deleteExisted(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
