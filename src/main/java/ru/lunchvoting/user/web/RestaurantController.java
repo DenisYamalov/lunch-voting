@@ -3,6 +3,8 @@ package ru.lunchvoting.user.web;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequestMapping(value = RestaurantController.RESTAURANT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "restaurants")
 public class RestaurantController {
     static final String RESTAURANT_URL = "/api/restaurants";
 
@@ -26,6 +29,7 @@ public class RestaurantController {
     //TODO count db queries
     @GetMapping
     @Operation(summary = "Get list of restaurants")
+    @Cacheable
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
@@ -33,6 +37,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     @Operation(summary = "Get restaurant",
             description = "Get restaurant by id")
+    @Cacheable(key = "#restaurantRepository.getExisted(#id).name")
     public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
         return restaurantRepository.getExisted(id);

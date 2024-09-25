@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import static ru.lunchvoting.common.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping(value = RestaurantAdminController.RESTAURANT_ADMIN_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@CacheConfig(cacheNames = "restaurants")
 public class RestaurantAdminController {
     static final String RESTAURANT_ADMIN_URL = "/api/admin/restaurants";
 
@@ -29,6 +33,7 @@ public class RestaurantAdminController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete restaurant")
+    @CacheEvict(key = "#id")
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         restaurantRepository.deleteExisted(id);
@@ -36,6 +41,7 @@ public class RestaurantAdminController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create restaurant")
+    @CachePut(key = "#restaurant.name")
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);

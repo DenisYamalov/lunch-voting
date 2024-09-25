@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import static ru.lunchvoting.common.validation.ValidationUtil.checkNew;
 @RequestMapping(value = DishAdminController.DISH_ADMIN_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "dishes")
 public class DishAdminController {
 
     static final String DISH_ADMIN_URL = RestaurantAdminController.RESTAURANT_ADMIN_URL + "/{restaurantId}/dishes";
@@ -32,6 +36,7 @@ public class DishAdminController {
     @PostMapping
     @Operation(summary = "Create dish",
             description = "Create new dish for restaurant with specified id")
+    @CachePut
     public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         log.info("create {} for restaurant id = {}", dish, restaurantId);
         checkNew(dish);
@@ -47,6 +52,7 @@ public class DishAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete dish",
             description = "Delete dish with specified id for restaurant with specified id")
+    @CacheEvict(key = "#id")
     public void delete(@PathVariable int id, @PathVariable int restaurantId) {
         log.info("delete {} for restaurant id = {}", id, restaurantId);
         dishRepository.getBelonged(restaurantId, id);
@@ -57,6 +63,7 @@ public class DishAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update dish",
             description = "Update dish with specified id for restaurant with specified id")
+    @CachePut(key = "#id")
     public void update(@Valid @RequestBody Dish dish, @PathVariable int id, @PathVariable int restaurantId) {
         log.info("update {} for restaurant id = {}", dish, restaurantId);
         assureIdConsistent(dish, id);
