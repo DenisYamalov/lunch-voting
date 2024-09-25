@@ -26,7 +26,7 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 // TODO: cache only most requested data!
 public class AppConfig {
 
-//        @Profile("!test")
+    @Profile("!test")
     @Bean(initMethod = "start", destroyMethod = "stop")
     Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");

@@ -37,7 +37,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     @Operation(summary = "Get restaurant",
             description = "Get restaurant by id")
-    @Cacheable(key = "#restaurantRepository.getExisted(#id).name")
+    @Cacheable
     public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
         return restaurantRepository.getExisted(id);

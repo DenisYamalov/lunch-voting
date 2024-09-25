@@ -1,3 +1,6 @@
+DROP INDEX users_unique_email_idx IF EXISTS;
+DROP INDEX dish_unique_idx IF EXISTS;
+DROP INDEX vote_unique_date_user_idx IF EXISTS;
 DROP TABLE user_role IF EXISTS;
 DROP TABLE dish IF EXISTS;
 DROP TABLE users IF EXISTS;
@@ -10,7 +13,7 @@ CREATE TABLE users
     name       VARCHAR(255)            NOT NULL,
     email      VARCHAR(255)            NOT NULL,
     password   VARCHAR(255)            NOT NULL,
-    registered TIMESTAMP DEFAULT now() NOT NULL,
+    registered TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     enabled    BOOLEAN   DEFAULT TRUE  NOT NULL
 );
 
