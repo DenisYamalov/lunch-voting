@@ -2,7 +2,6 @@ package ru.lunchvoting.user.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,11 +23,12 @@ import static ru.lunchvoting.user.UserTestData.USER_MAIL;
 import static ru.lunchvoting.user.VoteTestData.*;
 import static ru.lunchvoting.user.web.VoteController.VOTE_URL;
 
+//TODO mock clock
 class VoteControllerTest extends AbstractControllerTest {
     private static final String VOTE_URL_SLASH = VOTE_URL + "/";
 
-    @MockBean
-    Clock clock;
+//    @MockBean
+//    Clock clock;
 
     @Autowired
     VoteRepository repository;
@@ -62,8 +61,8 @@ class VoteControllerTest extends AbstractControllerTest {
         Clock fixedClock =
                 Clock.fixed(Instant.parse(LocalDate.now().atTime(10, 0).toInstant(ZoneOffset.of("Z")).toString()),
                             ZoneId.of("UTC"));
-        when(clock.instant()).thenReturn(fixedClock.instant());
-        when(clock.getZone()).thenReturn(fixedClock.getZone());
+//        when(clock.instant()).thenReturn(fixedClock.instant());
+//        when(clock.getZone()).thenReturn(fixedClock.getZone());
         perform(MockMvcRequestBuilders.post(VOTE_URL_SLASH + KFC_ID))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -75,8 +74,8 @@ class VoteControllerTest extends AbstractControllerTest {
         Clock fixedClock =
                 Clock.fixed(Instant.parse(LocalDate.now().atTime(10, 55).toInstant(ZoneOffset.of("Z")).toString()),
                             ZoneId.of("UTC"));
-        when(clock.instant()).thenReturn(fixedClock.instant());
-        when(clock.getZone()).thenReturn(fixedClock.getZone());
+//        when(clock.instant()).thenReturn(fixedClock.instant());
+//        when(clock.getZone()).thenReturn(fixedClock.getZone());
         perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -90,8 +89,8 @@ class VoteControllerTest extends AbstractControllerTest {
         Clock fixedClock =
                 Clock.fixed(Instant.parse(LocalDate.now().atTime(12, 0).toInstant(ZoneOffset.of("Z")).toString()),
                             ZoneId.of("UTC"));
-        when(clock.instant()).thenReturn(fixedClock.instant());
-        when(clock.getZone()).thenReturn(fixedClock.getZone());
+//        when(clock.instant()).thenReturn(fixedClock.instant());
+//        when(clock.getZone()).thenReturn(fixedClock.getZone());
         perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());

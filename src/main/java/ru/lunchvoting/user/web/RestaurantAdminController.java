@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class RestaurantAdminController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete restaurant")
-    @CacheEvict(key = "#id", cacheNames = "allRestaurants")
+    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(key = "#id")})
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         restaurantRepository.deleteExisted(id);
@@ -41,7 +41,6 @@ public class RestaurantAdminController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create restaurant")
-    @CachePut(key = "#restaurant.id")
     @CacheEvict(cacheNames = "allRestaurants", allEntries = true)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
@@ -57,8 +56,8 @@ public class RestaurantAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update restaurant",
             description = "Update restaurant with specified id")
-    @CachePut(key = "#restaurant.id")
-    @CacheEvict(cacheNames = "allRestaurants", allEntries = true)
+    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(cacheNames =
+            "restaurants", key = "#id")})
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
