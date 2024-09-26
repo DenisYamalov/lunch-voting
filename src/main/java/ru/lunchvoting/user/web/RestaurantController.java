@@ -24,12 +24,11 @@ import java.util.List;
 public class RestaurantController {
     static final String RESTAURANT_URL = "/api/restaurants";
 
-    RestaurantRepository restaurantRepository;
+    private RestaurantRepository restaurantRepository;
 
-    //TODO count db queries
     @GetMapping
     @Operation(summary = "Get list of restaurants")
-    @Cacheable
+    @Cacheable("allRestaurants")
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
@@ -37,7 +36,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     @Operation(summary = "Get restaurant",
             description = "Get restaurant by id")
-    @Cacheable
+    @Cacheable(key = "#id")
     public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
         return restaurantRepository.getExisted(id);

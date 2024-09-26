@@ -24,8 +24,7 @@ import org.springframework.context.annotation.Configuration;
                 description = """
                         <p><b>Тестовые креденшелы:</b><br>
                         - user@yandex.ru / password<br>
-                        - admin@gmail.com / admin<br>
-                        - guest@gmail.com / guest</p>
+                        - admin@gmail.com / admin</p>
                         """,
                 contact = @Contact(url = "https://t.me/DenisYamalov", name = "Denis Yamalov", email = "nokiden91@gmail.ru")
         ),

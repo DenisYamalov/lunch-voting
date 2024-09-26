@@ -33,7 +33,7 @@ public class RestaurantAdminController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete restaurant")
-    @CacheEvict(key = "#id")
+    @CacheEvict(key = "#id", cacheNames = "allRestaurants")
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         restaurantRepository.deleteExisted(id);
@@ -41,7 +41,8 @@ public class RestaurantAdminController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create restaurant")
-    @CachePut(key = "#restaurant.name")
+    @CachePut(key = "#restaurant.id")
+    @CacheEvict(cacheNames = "allRestaurants", allEntries = true)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);
@@ -56,6 +57,8 @@ public class RestaurantAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update restaurant",
             description = "Update restaurant with specified id")
+    @CachePut(key = "#restaurant.id")
+    @CacheEvict(cacheNames = "allRestaurants", allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);

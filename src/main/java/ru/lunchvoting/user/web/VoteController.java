@@ -7,19 +7,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.lunchvoting.app.AuthUser;
-import ru.lunchvoting.common.error.IllegalRequestDataException;
-import ru.lunchvoting.user.model.Vote;
-import ru.lunchvoting.user.repository.RestaurantRepository;
 import ru.lunchvoting.user.repository.VoteRepository;
+import ru.lunchvoting.user.service.VoteService;
 import ru.lunchvoting.user.to.VoteResult;
 
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -28,9 +24,8 @@ import java.util.Optional;
 public class VoteController {
     static final String VOTE_URL = "/api/votes";
 
-    VoteRepository repository;
-    RestaurantRepository restaurantRepository;
-    private final Clock clock;
+    private VoteService service;
+    private VoteRepository repository;
 
     /**
      * @return restaurant id
@@ -52,39 +47,11 @@ public class VoteController {
     }
 
     @PostMapping("/{id}")
-    @Operation(summary = "Vote for restaurant",
-            description = "Vote for specified restaurant by id")
+    @Operation(summary = "Vote/update vote for restaurant",
+            description = "Vote/update vote for specified restaurant by id")
+    @Transactional
     public void vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("user id = {} voting for restaurant id = {}", authUser.id(), id);
-        save(authUser, id);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update vote",
-            description = "Update vote for specified restaurant by id")
-    public void updateVote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("user id = {} updating vote for restaurant id = {}", authUser.id(), id);
-        save(authUser, id);
-    }
-
-    private void save(AuthUser authUser, int id) {
-        LocalDateTime now = LocalDateTime.now(clock);
-        LocalDate today = now.toLocalDate();
-        Vote vote;
-
-        if (now.isBefore(today.atTime(11, 0))) {
-            Optional<Vote> todayVote = repository.findByUserIdAndVoteDate(authUser.id(), today);
-
-            if (todayVote.isPresent()) {
-                vote = todayVote.get();
-                vote.setRestaurant(restaurantRepository.getExisted(id));
-                vote.setVoteDate(today);
-            } else {
-                vote = new Vote(null, authUser.getUser(), restaurantRepository.getExisted(id), today);
-            }
-        } else {
-            throw new IllegalRequestDataException("it is too late, vote can't be done after 11:00");
-        }
-        repository.save(vote);
+        service.save(authUser, id);
     }
 }
