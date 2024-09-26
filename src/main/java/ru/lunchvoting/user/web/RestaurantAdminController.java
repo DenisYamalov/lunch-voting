@@ -56,8 +56,7 @@ public class RestaurantAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update restaurant",
             description = "Update restaurant with specified id")
-    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(cacheNames =
-            "restaurants", key = "#id")})
+    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(key = "#id")})
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);

@@ -1,7 +1,6 @@
 package ru.lunchvoting.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"restaurant"})
-@AllArgsConstructor
 public class Dish extends NamedEntity {
     /**
      * price in cents
@@ -27,20 +25,27 @@ public class Dish extends NamedEntity {
     private Long price;
 
     //To save history
-    @Schema(hidden = true)
     @Column(name = "menu_date", nullable = false, columnDefinition = "date default now()")
     @NotNull
+    @JsonIgnore
     private LocalDate menuDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonIgnore
+    @NotNull
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, Restaurant restaurant, Long price) {
         super(id, name);
         this.restaurant = restaurant;
         this.price = price;
-        this.menuDate = LocalDate.now();
+    }
+
+    public Dish(Integer id, String name, LocalDate menuDate, Long price, Restaurant restaurant) {
+        super(id, name);
+        this.menuDate = menuDate;
+        this.price = price;
+        this.restaurant = restaurant;
     }
 }

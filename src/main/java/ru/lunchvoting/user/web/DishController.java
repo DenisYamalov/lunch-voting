@@ -30,7 +30,7 @@ public class DishController {
     @GetMapping
     @Operation(summary = "Get dishes",
             description = "Get list of dishes for specified restaurant")
-    @Cacheable
+    @Cacheable(cacheNames = "allDishes")
     public List<Dish> getAll(@PathVariable int restaurantId) {
         return dishRepository.getAllByRestaurantIdAndMenuDate(restaurantId, LocalDate.now());
     }

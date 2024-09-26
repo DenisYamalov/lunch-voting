@@ -5,7 +5,7 @@ spring:
     show-sql: true
     open-in-view: false
     # https://stackoverflow.com/a/67678945/548473
-#    defer-datasource-initialization: true
+    #    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
     properties:
@@ -43,7 +43,7 @@ spring:
 
   # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
   cache:
-    cache-names: allRestaurants,restaurants, dishes
+    cache-names: allRestaurants, restaurants, allDishes, dishes
     caffeine.spec: maximumSize=5000,expireAfterAccess=60s
 
 logging:

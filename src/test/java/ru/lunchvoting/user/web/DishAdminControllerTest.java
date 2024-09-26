@@ -14,6 +14,10 @@ import ru.lunchvoting.common.util.JsonUtil;
 import ru.lunchvoting.user.DishTestData;
 import ru.lunchvoting.user.model.Dish;
 import ru.lunchvoting.user.repository.DishRepository;
+import ru.lunchvoting.user.to.DishTo;
+import ru.lunchvoting.user.util.DishUtil;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,15 +56,16 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void create() throws Exception {
-        Dish newDish = DishTestData.getNew();
+        DishTo newDishTo = DishTestData.getNewTo();
         ResultActions action = perform(MockMvcRequestBuilders.post(KFC_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newDish)))
+                                               .contentType(MediaType.APPLICATION_JSON)
+                                               .content(JsonUtil.writeValue(newDishTo)))
                 .andDo(print());
         Dish created = DISH_MATCHER.readFromJson(action);
         int newId = created.id();
+        Dish newDish = DishUtil.createNewFromTo(newDishTo, KFC);
         newDish.setId(newId);
-        DISH_MATCHER.assertMatch(created, newDish);
+        DISH_NO_DATE_MATCHER.assertMatch(created, newDish);
         DISH_MATCHER.assertMatch(repository.getExisted(newId), newDish);
     }
 
@@ -69,8 +74,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     void createInvalid() throws Exception {
         Dish invalid = new Dish(null, null, null, null);
         perform(MockMvcRequestBuilders.post(KFC_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -78,10 +83,10 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Dish duplicate = new Dish(null, HAMBURGER_NAME, KFC, 100L);
+        DishTo duplicate = new DishTo(null, HAMBURGER_NAME, LocalDate.now(), 100L);
         perform(MockMvcRequestBuilders.post(KFC_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(duplicate)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(duplicate)))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -89,13 +94,14 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        Dish updated = DishTestData.getUpdated();
+        DishTo updated = DishTestData.getUpdated();
         perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        DISH_MATCHER.assertMatch(repository.getExisted(HAMBURGER_ID), updated);
+        Dish newFromTo = DishUtil.createNewFromTo(updated, KFC);
+        DISH_MATCHER.assertMatch(repository.getExisted(HAMBURGER_ID), newFromTo);
     }
 
     @Test
@@ -103,8 +109,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     void updateInvalid() throws Exception {
         Dish invalid = new Dish(HAMBURGER_ID, null, null, null);
         perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -113,10 +119,10 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Dish invalid = new Dish(HAMBURGER_ID, CHEESEBURGER_NAME, KFC, 150L);
+        DishTo invalid = new DishTo(HAMBURGER_ID, CHEESEBURGER_NAME, LocalDate.now(), 150L);
         perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -126,8 +132,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     void updateHtmlUnsafe() throws Exception {
         Dish invalid = new Dish(HAMBURGER_ID, "<script>alert(123)</script>", KFC, 150L);
         perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }

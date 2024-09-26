@@ -2,6 +2,9 @@ package ru.lunchvoting.user;
 
 import ru.lunchvoting.MatcherFactory;
 import ru.lunchvoting.user.model.Dish;
+import ru.lunchvoting.user.to.DishTo;
+
+import java.time.LocalDate;
 
 import static ru.lunchvoting.user.RestaurantTestData.*;
 
@@ -9,6 +12,9 @@ public class DishTestData {
 
     public static final MatcherFactory.Matcher<Dish> DISH_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Dish.class, "restaurant");
+
+    public static final MatcherFactory.Matcher<Dish> DISH_NO_DATE_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(Dish.class, "restaurant", "menuDate");
 
     public static final int HAMBURGER_ID = 1;
     public static final int CHEESEBURGER_ID = 2;
@@ -35,7 +41,11 @@ public class DishTestData {
         return new Dish(null, "New dish", KFC, 100L);
     }
 
-    public static Dish getUpdated() {
-        return new Dish(HAMBURGER_ID, "Updated Hamburger", KFC, 123L);
+    public static DishTo getNewTo() {
+        return new DishTo(null, "New dish", LocalDate.now(), 100L);
+    }
+
+    public static DishTo getUpdated() {
+        return new DishTo(HAMBURGER_ID, "Updated Hamburger", LocalDate.now(), 123L);
     }
 }
