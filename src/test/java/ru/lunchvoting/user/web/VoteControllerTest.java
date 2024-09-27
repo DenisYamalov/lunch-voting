@@ -90,7 +90,7 @@ class VoteControllerTest extends AbstractControllerTest {
         try (MockedStatic<LocalDateTime> mockedStatic = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
             LocalDateTime currentDateTime = LocalDate.now().atTime(12, 0);
             mockedStatic.when(LocalDateTime::now).thenReturn(currentDateTime);
-            perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
+            perform(MockMvcRequestBuilders.post(VOTE_URL_SLASH + BURGERKING_ID))
                     .andDo(print())
                     .andExpect(status().isUnprocessableEntity());
             assertNotEquals(BURGERKING_ID, repository.getExisted(USER_ID).getRestaurant().id());
