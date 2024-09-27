@@ -57,8 +57,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     void create() throws Exception {
         DishTo newDishTo = getNewTo();
         ResultActions action = perform(MockMvcRequestBuilders.post(KFC_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newDishTo)))
+                                               .contentType(MediaType.APPLICATION_JSON)
+                                               .content(JsonUtil.writeValue(newDishTo)))
                 .andDo(print());
         Dish created = DISH_MATCHER.readFromJson(action);
         int newId = created.id();
@@ -72,10 +72,7 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
         Dish invalid = new Dish(null, null, null, null);
-        perform(MockMvcRequestBuilders.post(KFC_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
+        getResultActionsPost(invalid, KFC_URL)
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -83,10 +80,7 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
         DishTo duplicate = new DishTo(null, HAMBURGER_NAME, LocalDate.now(), 100L);
-        perform(MockMvcRequestBuilders.post(KFC_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(duplicate)))
-                .andDo(print())
+        getResultActionsPost(duplicate, KFC_URL)
                 .andExpect(status().isConflict());
     }
 
@@ -94,10 +88,7 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         DishTo updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
-                .andDo(print())
+        getResultActionsPut(updated, KFC_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isNoContent());
         Dish newFromTo = DishUtil.createNewFromTo(updated, KFC);
         DISH_MATCHER.assertMatch(repository.getExisted(HAMBURGER_ID), newFromTo);
@@ -107,10 +98,7 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
         Dish invalid = new Dish(HAMBURGER_ID, null, null, null);
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
+        getResultActionsPut(invalid, KFC_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -119,10 +107,7 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
         DishTo invalid = new DishTo(HAMBURGER_ID, CHEESEBURGER_NAME, LocalDate.now(), 150L);
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
+        getResultActionsPut(invalid, KFC_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isConflict());
     }
 
@@ -130,10 +115,7 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateHtmlUnsafe() throws Exception {
         Dish invalid = new Dish(HAMBURGER_ID, "<script>alert(123)</script>", KFC, 150L);
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
+        getResultActionsPut(invalid, KFC_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isUnprocessableEntity());
     }
 }

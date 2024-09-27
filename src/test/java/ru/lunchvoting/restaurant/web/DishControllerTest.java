@@ -1,13 +1,9 @@
 package ru.lunchvoting.restaurant.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.lunchvoting.AbstractControllerTest;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.lunchvoting.restaurant.DishTestData.*;
 import static ru.lunchvoting.restaurant.RestaurantTestData.KFC_ID;
@@ -22,35 +18,29 @@ public class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(KFC_DISH_URL_SLASH + HAMBURGER_ID))
-                .andDo(print())
+        getResultActionsGet(KFC_DISH_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_MATCHER.contentJson(HAMBURGER));
     }
 
     @Test
     void getUnauth() throws Exception {
-        perform(MockMvcRequestBuilders.get(KFC_DISH_URL_SLASH + HAMBURGER_ID))
-                .andDo(print())
+        getResultActionsGet(KFC_DISH_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(KFC_DISH_URL_SLASH + HAMBURGER_ID + 10))
-                .andDo(print())
+        getResultActionsGet(KFC_DISH_URL_SLASH + HAMBURGER_ID + 10)
                 .andExpect(status().isConflict());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(KFC_DISH_URL))
-                .andDo(print())
+        getResultActionsGet(KFC_DISH_URL)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_MATCHER.contentJson(HAMBURGER, CHEESEBURGER));
     }
 }

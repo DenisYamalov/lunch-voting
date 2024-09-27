@@ -37,13 +37,13 @@ import java.util.Optional;
 
 import static ru.lunchvoting.common.error.ErrorType.*;
 
+@Getter
 @RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
 public class RestExceptionHandler {
     public static final String ERR_PFX = "ERR# ";
 
-    @Getter
     private final MessageSource messageSource;
 
     //    https://stackoverflow.com/a/52254601/548473
@@ -87,7 +87,8 @@ public class RestExceptionHandler {
 
     private String getErrorMessage(ObjectError error) {
         return error.getCode() == null ? error.getDefaultMessage() :
-                messageSource.getMessage(error.getCode(), error.getArguments(), error.getDefaultMessage(), LocaleContextHolder.getLocale());
+                messageSource.getMessage(error.getCode(), error.getArguments(), error.getDefaultMessage(),
+                                         LocaleContextHolder.getLocale());
     }
 
     @ExceptionHandler(Exception.class)
@@ -95,7 +96,9 @@ public class RestExceptionHandler {
         return processException(ex, request, Map.of());
     }
 
-    ProblemDetail processException(@NonNull Throwable ex, HttpServletRequest request, Map<String, Object> additionalParams) {
+    ProblemDetail processException(@NonNull Throwable ex,
+                                   HttpServletRequest request,
+                                   Map<String, Object> additionalParams) {
         Optional<ErrorType> optType = findErrorType(ex);
         if (optType.isEmpty()) {
             Throwable root = getRootCause(ex);
@@ -110,8 +113,9 @@ public class RestExceptionHandler {
             return createProblemDetail(ex, path, optType.get(), ex.getMessage(), additionalParams);
         } else {
             Throwable root = getRootCause(ex);
-            log.error(ERR_PFX + "Exception " + root + " at request " + path, root);
-            return createProblemDetail(ex, path, APP_ERROR, "Exception " + root.getClass().getSimpleName(), additionalParams);
+            log.error(ERR_PFX + "Exception {} at request {}", root, path, root);
+            return createProblemDetail(ex, path, APP_ERROR, "Exception " + root.getClass().getSimpleName(),
+                                       additionalParams);
         }
     }
 
@@ -126,7 +130,11 @@ public class RestExceptionHandler {
     }
 
     //    https://datatracker.ietf.org/doc/html/rfc7807
-    private ProblemDetail createProblemDetail(Throwable ex, String path, ErrorType type, String defaultDetail, @NonNull Map<String, Object> additionalParams) {
+    private ProblemDetail createProblemDetail(Throwable ex,
+                                              String path,
+                                              ErrorType type,
+                                              String defaultDetail,
+                                              @NonNull Map<String, Object> additionalParams) {
         ErrorResponse.Builder builder = ErrorResponse.builder(ex, type.status, defaultDetail);
         ProblemDetail pd = builder
                 .title(type.title).instance(URI.create(path))
