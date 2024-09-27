@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.model;
+package ru.lunchvoting.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

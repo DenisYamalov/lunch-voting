@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.to;
+package ru.lunchvoting.restaurant.to;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;

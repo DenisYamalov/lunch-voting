@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -9,9 +9,9 @@ import ru.lunchvoting.AbstractControllerTest;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.lunchvoting.user.RestaurantTestData.*;
+import static ru.lunchvoting.restaurant.RestaurantTestData.*;
 import static ru.lunchvoting.user.UserTestData.USER_MAIL;
-import static ru.lunchvoting.user.web.RestaurantController.RESTAURANT_URL;
+import static ru.lunchvoting.restaurant.web.RestaurantController.RESTAURANT_URL;
 
 class RestaurantControllerTest extends AbstractControllerTest {
 

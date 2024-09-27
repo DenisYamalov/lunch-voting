@@ -1,12 +1,12 @@
-package ru.lunchvoting.user;
+package ru.lunchvoting.restaurant;
 
 import ru.lunchvoting.MatcherFactory;
-import ru.lunchvoting.user.model.Dish;
-import ru.lunchvoting.user.to.DishTo;
+import ru.lunchvoting.restaurant.model.Dish;
+import ru.lunchvoting.restaurant.to.DishTo;
 
 import java.time.LocalDate;
 
-import static ru.lunchvoting.user.RestaurantTestData.*;
+import static ru.lunchvoting.restaurant.RestaurantTestData.*;
 
 public class DishTestData {
 
@@ -36,10 +36,6 @@ public class DishTestData {
     public static final Dish MCCHICKEN = new Dish(MCCHICKEN_ID, MCCHICKEN_NAME, MCDONALDS, 100L);
     public static final Dish WHOPPER = new Dish(WHOPPER_ID, WHOPPER_NAME, BURGERKING, 150L);
     public static final Dish BACONKING = new Dish(BACONKING_ID, BACONKING_NAME, BURGERKING, 200L);
-
-    public static Dish getNew() {
-        return new Dish(null, "New dish", KFC, 100L);
-    }
 
     public static DishTo getNewTo() {
         return new DishTo(null, "New dish", LocalDate.now(), 100L);

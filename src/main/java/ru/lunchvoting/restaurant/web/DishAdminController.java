@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -12,11 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.lunchvoting.user.model.Dish;
-import ru.lunchvoting.user.repository.DishRepository;
-import ru.lunchvoting.user.repository.RestaurantRepository;
-import ru.lunchvoting.user.to.DishTo;
-import ru.lunchvoting.user.util.DishUtil;
+import ru.lunchvoting.restaurant.model.Dish;
+import ru.lunchvoting.restaurant.repository.DishRepository;
+import ru.lunchvoting.restaurant.repository.RestaurantRepository;
+import ru.lunchvoting.restaurant.to.DishTo;
+import ru.lunchvoting.restaurant.util.DishUtil;
 
 import java.net.URI;
 

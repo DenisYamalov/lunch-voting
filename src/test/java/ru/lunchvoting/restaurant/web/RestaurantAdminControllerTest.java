@@ -1,6 +1,5 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,69 +10,58 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.AbstractControllerTest;
 import ru.lunchvoting.common.util.JsonUtil;
-import ru.lunchvoting.user.DishTestData;
-import ru.lunchvoting.user.model.Dish;
-import ru.lunchvoting.user.repository.DishRepository;
-import ru.lunchvoting.user.to.DishTo;
-import ru.lunchvoting.user.util.DishUtil;
-
-import java.time.LocalDate;
+import ru.lunchvoting.restaurant.model.Restaurant;
+import ru.lunchvoting.restaurant.repository.RestaurantRepository;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.lunchvoting.user.DishTestData.*;
-import static ru.lunchvoting.user.RestaurantTestData.KFC;
-import static ru.lunchvoting.user.RestaurantTestData.KFC_ID;
+import static ru.lunchvoting.restaurant.RestaurantTestData.*;
 import static ru.lunchvoting.user.UserTestData.ADMIN_MAIL;
 import static ru.lunchvoting.user.UserTestData.USER_MAIL;
-import static ru.lunchvoting.user.web.RestaurantAdminController.RESTAURANT_ADMIN_URL;
+import static ru.lunchvoting.restaurant.web.RestaurantAdminController.RESTAURANT_ADMIN_URL;
 
-@Slf4j
-class DishAdminControllerTest extends AbstractControllerTest {
+class RestaurantAdminControllerTest extends AbstractControllerTest {
 
-    private static final String KFC_URL = RESTAURANT_ADMIN_URL + "/" + KFC_ID + "/dishes";
-    private static final String KFC_URL_SLASH = KFC_URL + "/";
+    private static final String RESTAURANT_ADMIN_URL_SLASH = RESTAURANT_ADMIN_URL + "/";
 
     @Autowired
-    DishRepository repository;
+    RestaurantRepository repository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(KFC_URL_SLASH + HAMBURGER_ID))
+        perform(MockMvcRequestBuilders.delete(RESTAURANT_ADMIN_URL_SLASH + KFC_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(repository.get(KFC_ID, HAMBURGER_ID).isPresent());
+        assertFalse(repository.findById(KFC_ID).isPresent());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void deleteNotAdmin() throws Exception {
-        perform(MockMvcRequestBuilders.delete(KFC_URL_SLASH + HAMBURGER_ID))
+        perform(MockMvcRequestBuilders.delete(RESTAURANT_ADMIN_URL_SLASH + KFC_ID))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void create() throws Exception {
-        DishTo newDishTo = DishTestData.getNewTo();
-        ResultActions action = perform(MockMvcRequestBuilders.post(KFC_URL)
+        Restaurant newRestaurant = getNew();
+        ResultActions action = perform(MockMvcRequestBuilders.post(RESTAURANT_ADMIN_URL)
                                                .contentType(MediaType.APPLICATION_JSON)
-                                               .content(JsonUtil.writeValue(newDishTo)))
-                .andDo(print());
-        Dish created = DISH_MATCHER.readFromJson(action);
+                                               .content(JsonUtil.writeValue(newRestaurant)));
+        Restaurant created = RESTAURANT_MATCHER.readFromJson(action);
         int newId = created.id();
-        Dish newDish = DishUtil.createNewFromTo(newDishTo, KFC);
-        newDish.setId(newId);
-        DISH_NO_DATE_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(repository.getExisted(newId), newDish);
+        newRestaurant.setId(newId);
+        RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(repository.getExisted(newId), newRestaurant);
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Dish invalid = new Dish(null, null, null, null);
-        perform(MockMvcRequestBuilders.post(KFC_URL)
+        Restaurant invalid = new Restaurant(null, null);
+        perform(MockMvcRequestBuilders.post(RESTAURANT_ADMIN_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -83,10 +71,10 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        DishTo duplicate = new DishTo(null, HAMBURGER_NAME, LocalDate.now(), 100L);
-        perform(MockMvcRequestBuilders.post(KFC_URL)
+        Restaurant invalid = new Restaurant(null, KFC_NAME);
+        perform(MockMvcRequestBuilders.post(RESTAURANT_ADMIN_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.writeValue(duplicate)))
+                        .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -94,21 +82,20 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        DishTo updated = DishTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
+        Restaurant updated = getUpdated();
+        perform(MockMvcRequestBuilders.put(RESTAURANT_ADMIN_URL_SLASH + MCDONALDS_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        Dish newFromTo = DishUtil.createNewFromTo(updated, KFC);
-        DISH_MATCHER.assertMatch(repository.getExisted(HAMBURGER_ID), newFromTo);
+        RESTAURANT_MATCHER.assertMatch(repository.getExisted(MCDONALDS_ID), updated);
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        Dish invalid = new Dish(HAMBURGER_ID, null, null, null);
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
+        Restaurant invalid = new Restaurant(KFC_ID, null);
+        perform(MockMvcRequestBuilders.put(RESTAURANT_ADMIN_URL_SLASH + KFC_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -119,8 +106,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        DishTo invalid = new DishTo(HAMBURGER_ID, CHEESEBURGER_NAME, LocalDate.now(), 150L);
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
+        Restaurant invalid = new Restaurant(MCDONALDS_ID, KFC_NAME);
+        perform(MockMvcRequestBuilders.put(RESTAURANT_ADMIN_URL_SLASH + MCDONALDS_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -130,8 +117,8 @@ class DishAdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateHtmlUnsafe() throws Exception {
-        Dish invalid = new Dish(HAMBURGER_ID, "<script>alert(123)</script>", KFC, 150L);
-        perform(MockMvcRequestBuilders.put(KFC_URL_SLASH + HAMBURGER_ID)
+        Restaurant invalid = new Restaurant(MCDONALDS_ID, "<script>alert(123)</script>");
+        perform(MockMvcRequestBuilders.put(RESTAURANT_ADMIN_URL_SLASH + MCDONALDS_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())

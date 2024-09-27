@@ -1,12 +1,9 @@
-package ru.lunchvoting.user.repository;
+package ru.lunchvoting.restaurant.repository;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.common.BaseRepository;
-import ru.lunchvoting.user.model.Restaurant;
-
-import java.util.Optional;
+import ru.lunchvoting.restaurant.model.Restaurant;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
-    Optional<Restaurant> findByName(String name);
 }

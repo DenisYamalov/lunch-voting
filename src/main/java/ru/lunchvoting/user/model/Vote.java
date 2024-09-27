@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ru.lunchvoting.common.model.BaseEntity;
+import ru.lunchvoting.restaurant.model.Restaurant;
 
 import java.time.LocalDate;
 

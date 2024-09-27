@@ -1,28 +1,23 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.lunchvoting.AbstractControllerTest;
-import ru.lunchvoting.user.repository.DishRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.lunchvoting.user.DishTestData.*;
-import static ru.lunchvoting.user.RestaurantTestData.*;
+import static ru.lunchvoting.restaurant.DishTestData.*;
+import static ru.lunchvoting.restaurant.RestaurantTestData.KFC_ID;
+import static ru.lunchvoting.restaurant.web.RestaurantController.RESTAURANT_URL;
 import static ru.lunchvoting.user.UserTestData.USER_MAIL;
-import static ru.lunchvoting.user.web.RestaurantController.RESTAURANT_URL;
 
 public class DishControllerTest extends AbstractControllerTest {
 
     private static final String KFC_DISH_URL = RESTAURANT_URL + "/" + KFC_ID + "/dishes";
     private static final String KFC_DISH_URL_SLASH = KFC_DISH_URL + "/";
-
-    @Autowired
-    DishRepository repository;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -49,7 +44,6 @@ public class DishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isConflict());
     }
 
-
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
@@ -57,6 +51,6 @@ public class DishControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(HAMBURGER,CHEESEBURGER));
+                .andExpect(DISH_MATCHER.contentJson(HAMBURGER, CHEESEBURGER));
     }
 }

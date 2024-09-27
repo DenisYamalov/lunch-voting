@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.error.IllegalRequestDataException;
-import ru.lunchvoting.user.model.Restaurant;
+import ru.lunchvoting.restaurant.model.Restaurant;
 import ru.lunchvoting.user.model.Vote;
-import ru.lunchvoting.user.repository.RestaurantRepository;
+import ru.lunchvoting.restaurant.repository.RestaurantRepository;
 import ru.lunchvoting.user.repository.VoteRepository;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.lunchvoting.user.model.Dish;
-import ru.lunchvoting.user.repository.DishRepository;
+import ru.lunchvoting.restaurant.model.Dish;
+import ru.lunchvoting.restaurant.repository.DishRepository;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,10 +1,10 @@
-package ru.lunchvoting.user.repository;
+package ru.lunchvoting.restaurant.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.common.BaseRepository;
 import ru.lunchvoting.common.error.DataConflictException;
-import ru.lunchvoting.user.model.Dish;
+import ru.lunchvoting.restaurant.model.Dish;
 
 import java.time.LocalDate;
 import java.util.List;

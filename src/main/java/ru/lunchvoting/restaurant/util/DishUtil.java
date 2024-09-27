@@ -1,9 +1,9 @@
-package ru.lunchvoting.user.util;
+package ru.lunchvoting.restaurant.util;
 
 import lombok.experimental.UtilityClass;
-import ru.lunchvoting.user.model.Dish;
-import ru.lunchvoting.user.model.Restaurant;
-import ru.lunchvoting.user.to.DishTo;
+import ru.lunchvoting.restaurant.model.Dish;
+import ru.lunchvoting.restaurant.model.Restaurant;
+import ru.lunchvoting.restaurant.to.DishTo;
 
 @UtilityClass
 public class DishUtil {

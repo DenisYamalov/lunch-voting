@@ -1,7 +1,7 @@
-package ru.lunchvoting.user;
+package ru.lunchvoting.restaurant;
 
 import ru.lunchvoting.MatcherFactory;
-import ru.lunchvoting.user.model.Restaurant;
+import ru.lunchvoting.restaurant.model.Restaurant;
 
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER =
