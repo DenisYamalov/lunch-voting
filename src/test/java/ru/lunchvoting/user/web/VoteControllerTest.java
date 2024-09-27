@@ -1,6 +1,8 @@
 package ru.lunchvoting.user.web;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -8,7 +10,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.lunchvoting.AbstractControllerTest;
 import ru.lunchvoting.user.repository.VoteRepository;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,12 +26,8 @@ import static ru.lunchvoting.user.UserTestData.USER_MAIL;
 import static ru.lunchvoting.user.VoteTestData.*;
 import static ru.lunchvoting.user.web.VoteController.VOTE_URL;
 
-//TODO mock clock
 class VoteControllerTest extends AbstractControllerTest {
     private static final String VOTE_URL_SLASH = VOTE_URL + "/";
-
-//    @MockBean
-//    Clock clock;
 
     @Autowired
     VoteRepository repository;
@@ -47,8 +46,8 @@ class VoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void getVoteResults() throws Exception {
         perform(MockMvcRequestBuilders.get(VOTE_URL + "/results")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("date", LocalDate.now().toString()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("date", LocalDate.now().toString()))
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -58,42 +57,43 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void vote() throws Exception {
-        Clock fixedClock =
-                Clock.fixed(Instant.parse(LocalDate.now().atTime(10, 0).toInstant(ZoneOffset.of("Z")).toString()),
-                            ZoneId.of("UTC"));
-//        when(clock.instant()).thenReturn(fixedClock.instant());
-//        when(clock.getZone()).thenReturn(fixedClock.getZone());
-        perform(MockMvcRequestBuilders.post(VOTE_URL_SLASH + KFC_ID))
-                .andDo(print())
-                .andExpect(status().isOk());
+//        https://stackoverflow.com/a/76663689
+        try (MockedStatic<LocalDateTime> mockedStatic = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+            LocalDateTime currentDateTime = LocalDate.now().atTime(10, 0);
+            mockedStatic.when(LocalDateTime::now).thenReturn(currentDateTime);
+
+            perform(MockMvcRequestBuilders.post(VOTE_URL_SLASH + KFC_ID))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateVote() throws Exception {
-        Clock fixedClock =
-                Clock.fixed(Instant.parse(LocalDate.now().atTime(10, 55).toInstant(ZoneOffset.of("Z")).toString()),
-                            ZoneId.of("UTC"));
-//        when(clock.instant()).thenReturn(fixedClock.instant());
-//        when(clock.getZone()).thenReturn(fixedClock.getZone());
-        perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
-                .andDo(print())
-                .andExpect(status().isOk());
+        //https://stackoverflow.com/a/76663689
+        try (MockedStatic<LocalDateTime> mockedStatic = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+            LocalDateTime currentDateTime = LocalDate.now().atTime(10, 0);
+            mockedStatic.when(LocalDateTime::now).thenReturn(currentDateTime);
+            perform(MockMvcRequestBuilders.post(VOTE_URL_SLASH + BURGERKING_ID))
+                    .andDo(print())
+                    .andExpect(status().isOk());
 
-        assertEquals(BURGERKING_ID, repository.getExisted(USER_ID).getRestaurant().id());
+            assertEquals(BURGERKING_ID, repository.getExisted(USER_ID).getRestaurant().id());
+        }
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateVoteLate() throws Exception {
-        Clock fixedClock =
-                Clock.fixed(Instant.parse(LocalDate.now().atTime(12, 0).toInstant(ZoneOffset.of("Z")).toString()),
-                            ZoneId.of("UTC"));
-//        when(clock.instant()).thenReturn(fixedClock.instant());
-//        when(clock.getZone()).thenReturn(fixedClock.getZone());
-        perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-        assertNotEquals(BURGERKING_ID, repository.getExisted(USER_ID).getRestaurant().id());
+        //https://stackoverflow.com/a/76663689
+        try (MockedStatic<LocalDateTime> mockedStatic = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+            LocalDateTime currentDateTime = LocalDate.now().atTime(12, 0);
+            mockedStatic.when(LocalDateTime::now).thenReturn(currentDateTime);
+            perform(MockMvcRequestBuilders.put(VOTE_URL_SLASH + BURGERKING_ID))
+                    .andDo(print())
+                    .andExpect(status().isUnprocessableEntity());
+            assertNotEquals(BURGERKING_ID, repository.getExisted(USER_ID).getRestaurant().id());
+        }
     }
 }

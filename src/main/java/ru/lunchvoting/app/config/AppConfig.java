@@ -15,7 +15,6 @@ import org.springframework.http.converter.json.ProblemDetailJacksonMixin;
 import ru.lunchvoting.common.util.JsonUtil;
 
 import java.sql.SQLException;
-import java.time.Clock;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
@@ -43,10 +42,5 @@ public class AppConfig {
         // ErrorHandling: https://stackoverflow.com/questions/7421474/548473
         objectMapper.addMixIn(ProblemDetail.class, MixIn.class);
         JsonUtil.setMapper(objectMapper);
-    }
-
-    @Bean
-    public Clock clock() {
-        return Clock.systemDefaultZone();  // Use system default clock
     }
 }
