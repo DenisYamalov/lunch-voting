@@ -14,15 +14,15 @@ VALUES ('KFC'),
        ('McDonalds'),
        ('Burger King');
 
-INSERT INTO dish (name, price, restaurant_id)
-VALUES ('Hamburger', 100, 1),
-       ('Cheeseburger', 150, 1),
-       ('Big Mac', 200, 2),
-       ('McChicken', 100, 2),
-       ('Whopper', 150, 3),
-       ('Bacon King', 200, 3);
+INSERT INTO dish (name, price, menu_date, restaurant_id)
+VALUES ('Hamburger', 100, CURRENT_DATE(), 1),
+       ('Cheeseburger', 150, CURRENT_DATE(), 1),
+       ('Big Mac', 200, CURRENT_DATE(), 2),
+       ('McChicken', 100, CURRENT_DATE(), 2),
+       ('Whopper', 150, CURRENT_DATE(), 3),
+       ('Bacon King', 200, CURRENT_DATE(), 3);
 
-INSERT INTO vote (user_id, restaurant_id, vote_date)
-VALUES (1, 1, CURRENT_DATE()),
-       (2, 2, CURRENT_DATE()),
-       (3, 2, CURRENT_DATE());
+INSERT INTO vote (user_id, restaurant_id)
+VALUES (1, 1),
+       (2, 2),
+       (3, 2);

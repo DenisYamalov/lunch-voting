@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.service;
+package ru.lunchvoting.restaurant.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.error.IllegalRequestDataException;
 import ru.lunchvoting.restaurant.model.Restaurant;
-import ru.lunchvoting.user.model.Vote;
+import ru.lunchvoting.restaurant.model.Vote;
 import ru.lunchvoting.restaurant.repository.RestaurantRepository;
-import ru.lunchvoting.user.repository.VoteRepository;
+import ru.lunchvoting.restaurant.repository.VoteRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

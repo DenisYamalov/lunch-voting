@@ -1,10 +1,10 @@
-package ru.lunchvoting.user.model;
+package ru.lunchvoting.restaurant.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ru.lunchvoting.common.model.BaseEntity;
-import ru.lunchvoting.restaurant.model.Restaurant;
+import ru.lunchvoting.user.model.User;
 
 import java.time.LocalDate;
 
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"user", "restaurant"})
 public class Vote extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,7 +25,7 @@ public class Vote extends BaseEntity {
     @NotNull
     private Restaurant restaurant;
 
-    @Column(name = "vote_date", nullable = false)
+    @Column(name = "vote_date", nullable = false, columnDefinition = "date default now()")
     @NotNull
     private LocalDate voteDate;
 

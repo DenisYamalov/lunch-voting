@@ -25,7 +25,7 @@ public class Dish extends NamedEntity {
     private Long price;
 
     //To save history
-    @Column(name = "menu_date", nullable = false, columnDefinition = "date default now()")
+    @Column(name = "menu_date", nullable = false)
     @NotNull
     @JsonIgnore
     private LocalDate menuDate;

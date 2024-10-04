@@ -41,6 +41,6 @@ public class DishControllerTest extends AbstractControllerTest {
     void getAll() throws Exception {
         getResultActionsGet(KFC_DISH_URL)
                 .andExpect(status().isOk())
-                .andExpect(DISH_MATCHER.contentJson(HAMBURGER, CHEESEBURGER));
+                .andExpect(DISH_MATCHER.contentJson(CHEESEBURGER, HAMBURGER));
     }
 }

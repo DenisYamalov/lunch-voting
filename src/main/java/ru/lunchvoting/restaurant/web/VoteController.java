@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.lunchvoting.app.AuthUser;
-import ru.lunchvoting.user.repository.VoteRepository;
-import ru.lunchvoting.user.service.VoteService;
-import ru.lunchvoting.user.to.VoteResult;
+import ru.lunchvoting.restaurant.repository.VoteRepository;
+import ru.lunchvoting.restaurant.service.VoteService;
+import ru.lunchvoting.restaurant.to.VoteResult;
 
 import java.time.LocalDate;
 import java.util.List;

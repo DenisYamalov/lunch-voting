@@ -48,7 +48,8 @@ public class DishAdminController {
 
     @PostMapping
     @Operation(summary = "Create dish",
-            description = "Create new dish for restaurant with specified id")
+            description = "Create new dish for restaurant with specified id. There could be only one dish with same " +
+                          "name, price, date at one restaurant")
     @CacheEvict(cacheNames = "allDishes", allEntries = true)
     public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody DishTo dishTo) {
         log.info("create {} for restaurant id = {}", dishTo, restaurantId);

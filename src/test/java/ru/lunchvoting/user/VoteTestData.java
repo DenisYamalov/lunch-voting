@@ -1,7 +1,7 @@
 package ru.lunchvoting.user;
 
 import ru.lunchvoting.MatcherFactory;
-import ru.lunchvoting.user.to.VoteResult;
+import ru.lunchvoting.restaurant.to.VoteResult;
 
 import static ru.lunchvoting.restaurant.RestaurantTestData.KFC_ID;
 import static ru.lunchvoting.restaurant.RestaurantTestData.MCDONALDS_ID;

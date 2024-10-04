@@ -1,4 +1,4 @@
-package ru.lunchvoting.user.web;
+package ru.lunchvoting.restaurant.web;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.lunchvoting.AbstractControllerTest;
-import ru.lunchvoting.user.repository.VoteRepository;
+import ru.lunchvoting.restaurant.repository.VoteRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ import static ru.lunchvoting.restaurant.RestaurantTestData.KFC_ID;
 import static ru.lunchvoting.user.UserTestData.USER_ID;
 import static ru.lunchvoting.user.UserTestData.USER_MAIL;
 import static ru.lunchvoting.user.VoteTestData.*;
-import static ru.lunchvoting.user.web.VoteController.VOTE_URL;
+import static ru.lunchvoting.restaurant.web.VoteController.VOTE_URL;
 
 class VoteControllerTest extends AbstractControllerTest {
     private static final String VOTE_URL_SLASH = VOTE_URL + "/";
