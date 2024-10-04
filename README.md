@@ -1,3 +1,13 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/7807cc8199034a788d8dcbf70f9469c7)](https://app.codacy.com/gh/DenisYamalov/lunch-voting/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
+# Lunch voting system
+REST Api for lunch voting
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
+
+Based on _Spring Boot, SpringDataJpa(Hibernate as JPA provider), db - H2, Spring Security, JackSon, Spring Cache (caffeine), Junit, Mockito_
+
+
 Technical requirement:
 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (Spring-Boot preferred!) without frontend.
