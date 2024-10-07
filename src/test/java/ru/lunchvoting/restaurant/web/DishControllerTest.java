@@ -20,7 +20,7 @@ public class DishControllerTest extends AbstractControllerTest {
     void get() throws Exception {
         getResultActionsGet(KFC_DISH_URL_SLASH + HAMBURGER_ID)
                 .andExpect(status().isOk())
-                .andExpect(DISH_MATCHER.contentJson(HAMBURGER));
+                .andExpect(DISH_MATCHER.contentJson(HAMBURGER_TODAY));
     }
 
     @Test
@@ -41,6 +41,15 @@ public class DishControllerTest extends AbstractControllerTest {
     void getAll() throws Exception {
         getResultActionsGet(KFC_DISH_URL)
                 .andExpect(status().isOk())
-                .andExpect(DISH_MATCHER.contentJson(CHEESEBURGER, HAMBURGER));
+                .andExpect(DISH_MATCHER.contentJson(CHEESEBURGER_TODAY, HAMBURGER_TODAY, CHEESEBURGER_OCT02, HAMBURGER_OCT02, CHEESEBURGER_OCT01, HAMBURGER_OCT01));
+    }
+
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void getAllByDate() throws Exception {
+        getResultActionsGet(KFC_DISH_URL_SLASH+"by-date?date=2024-10-01")
+                .andExpect(status().isOk())
+                .andExpect(DISH_MATCHER.contentJson(CHEESEBURGER_OCT01, HAMBURGER_OCT01));
     }
 }

@@ -20,7 +20,11 @@ VALUES ('Hamburger', 100, CURRENT_DATE(), 1),
        ('Big Mac', 200, CURRENT_DATE(), 2),
        ('McChicken', 100, CURRENT_DATE(), 2),
        ('Whopper', 150, CURRENT_DATE(), 3),
-       ('Bacon King', 200, CURRENT_DATE(), 3);
+       ('Bacon King', 200, CURRENT_DATE(), 3),
+       ('Hamburger', 100, '2024-10-01', 1),
+       ('Cheeseburger', 150, '2024-10-01', 1),
+       ('Hamburger', 100, '2024-10-02', 1),
+       ('Cheeseburger', 150, '2024-10-02', 1);
 
 INSERT INTO vote (user_id, restaurant_id)
 VALUES (1, 1),

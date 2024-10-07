@@ -1,6 +1,7 @@
 package ru.lunchvoting.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -27,7 +28,6 @@ public class Dish extends NamedEntity {
     //To save history
     @Column(name = "menu_date", nullable = false)
     @NotNull
-    @JsonIgnore
     private LocalDate menuDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
