@@ -19,4 +19,6 @@ public interface VoteRepository extends BaseRepository<Vote> {
             SELECT NEW ru.lunchvoting.restaurant.to.VoteResult(v.restaurant.id, count(v.id))
             FROM Vote v WHERE v.voteDate=:voteDate GROUP BY v.restaurant.id ORDER BY count(v.id) DESC""")
     List<VoteResult> getResults(LocalDate voteDate);
+
+    List<Vote> findAllByUserId(int userId);
 }

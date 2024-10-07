@@ -2,10 +2,8 @@ package ru.lunchvoting.restaurant.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.error.IllegalRequestDataException;
-import ru.lunchvoting.restaurant.model.Restaurant;
 import ru.lunchvoting.restaurant.model.Vote;
 import ru.lunchvoting.restaurant.repository.RestaurantRepository;
 import ru.lunchvoting.restaurant.repository.VoteRepository;
@@ -13,6 +11,8 @@ import ru.lunchvoting.restaurant.repository.VoteRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static ru.lunchvoting.common.validation.ValidationUtil.assureIdConsistent;
 
 @Service
 @AllArgsConstructor
@@ -23,27 +23,39 @@ public class VoteService {
     static final int VOTE_HOUR = 11;
     static final int VOTE_MIN = 0;
 
-    //TODO prevent restaurant_id in at sql
-    @Transactional
-    public void save(AuthUser authUser, int id) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate today = now.toLocalDate();
-        Vote vote;
+    public Vote create(AuthUser authUser, int restaurantId) {
+        if (getVoteFromRepo(authUser).isPresent()) {
+            throw new IllegalRequestDataException("User already voted");
+        }
+        Vote vote = new Vote(null, authUser.getUser(), null, LocalDate.now());
+        return save(vote, restaurantId);
+    }
 
-        if (now.isBefore(today.atTime(VOTE_HOUR, VOTE_MIN))) {
-            Optional<Vote> todayVote = repository.findByUserIdAndVoteDate(authUser.id(), today);
-            Restaurant restaurant = restaurantRepository.getExisted(id);
+    public void update(AuthUser authUser, int restaurantId, int id) {
+        Optional<Vote> voteFromRepo = getVoteFromRepo(authUser);
+        if (voteFromRepo.isPresent()) {
 
-            if (todayVote.isPresent()) {
-                vote = todayVote.get();
-                vote.setRestaurant(restaurant);
-                vote.setVoteDate(today);
+            Vote vote = voteFromRepo.get();
+            assureIdConsistent(vote, id);
+            LocalDate today = LocalDate.now();
+            if (LocalDateTime.now().isBefore(today.atTime(VOTE_HOUR, VOTE_MIN))) {
+                save(vote, restaurantId);
             } else {
-                vote = new Vote(null, authUser.getUser(), restaurant, today);
+                throw new IllegalRequestDataException("it is too late, vote can't be changed after 11:00");
             }
         } else {
-            throw new IllegalRequestDataException("it is too late, vote can't be done after 11:00");
+            throw new IllegalRequestDataException("User did not vote today");
         }
-        repository.save(vote);
     }
+
+    private Vote save(Vote vote, int restaurantId) {
+        vote.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
+        return repository.save(vote);
+    }
+
+    private Optional<Vote> getVoteFromRepo(AuthUser authUser) {
+        LocalDate today = LocalDate.now();
+        return repository.findByUserIdAndVoteDate(authUser.id(), today);
+    }
+
 }

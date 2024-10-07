@@ -16,6 +16,7 @@ import ru.lunchvoting.restaurant.repository.DishRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+//TODO add price description
 @RestController
 @RequestMapping(value = DishController.DISH_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
