@@ -43,14 +43,19 @@ public class VoteController {
         return VoteUtil.toVoteTo(repository.findAllByUserId(authUser.id()));
     }
 
-    /**
-     * @return restaurant id
-     */
+    @GetMapping("{id}")
+    @Operation(summary = "Get vote by id")
+    public VoteTo getVoteByDate(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        log.info("get vote id = {}for user id = {}", id, authUser.id());
+        Vote belonged = repository.getBelonged(authUser.id(), id);
+        return VoteUtil.toVoteTo(belonged);
+    }
+
     @GetMapping("/by-date")
     @Operation(summary = "Get vote",
             description = "Get voted restaurant id for specified date")
-    public VoteTo getVote(@AuthenticationPrincipal AuthUser authUser,
-                          @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public VoteTo getVoteByDate(@AuthenticationPrincipal AuthUser authUser,
+                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get vote for user id = {} on date = {}", authUser.id(), date);
         LocalDate finalDate = date == null ? LocalDate.now() : date;
         Vote existed = repository.findByUserIdAndVoteDate(authUser.id(), finalDate)

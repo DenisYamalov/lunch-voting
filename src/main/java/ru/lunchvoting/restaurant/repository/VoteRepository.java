@@ -3,6 +3,7 @@ package ru.lunchvoting.restaurant.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.common.BaseRepository;
+import ru.lunchvoting.common.error.DataConflictException;
 import ru.lunchvoting.restaurant.model.Vote;
 import ru.lunchvoting.restaurant.to.VoteResult;
 
@@ -21,4 +22,13 @@ public interface VoteRepository extends BaseRepository<Vote> {
     List<VoteResult> getResults(LocalDate voteDate);
 
     List<Vote> findAllByUserId(int userId);
+
+    @Query("SELECT v FROM Vote v WHERE v.id = :id and v.user.id = :userId")
+    Optional<Vote> get(int userId, int id);
+
+    default Vote getBelonged(int userId, int id) {
+        return get(userId, id).orElseThrow(
+                () -> new DataConflictException("Vote id =" + id +
+                                                " is not exist or doesn't belong to User id=" + userId));
+    }
 }

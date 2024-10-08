@@ -26,8 +26,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.lunchvoting.restaurant.RestaurantTestData.BURGERKING_ID;
-import static ru.lunchvoting.restaurant.VoteTestData.USER_VOTE_TO;
-import static ru.lunchvoting.restaurant.VoteTestData.VOTE_TO_MATCHER;
+import static ru.lunchvoting.restaurant.VoteTestData.*;
 import static ru.lunchvoting.restaurant.web.VoteController.VOTE_URL;
 import static ru.lunchvoting.user.UserTestData.*;
 
@@ -39,8 +38,16 @@ class VoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void getVoteToday() throws Exception {
-        getResultActionsGet(VOTE_URL + "/by-date")
+    void getVoteByDateToday() throws Exception {
+        getResultActionsGet(VOTE_URL_SLASH + "by-date")
+                .andExpect(status().isOk())
+                .andExpect(VOTE_TO_MATCHER.contentJson(USER_VOTE_TO));
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void getVoteById() throws Exception {
+        getResultActionsGet(VOTE_URL_SLASH + USER_VOTE_ID)
                 .andExpect(status().isOk())
                 .andExpect(VOTE_TO_MATCHER.contentJson(USER_VOTE_TO));
     }
