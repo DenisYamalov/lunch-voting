@@ -15,9 +15,10 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.lunchvoting.user.UserTestData.*;
-import static ru.lunchvoting.user.web.ProfileController.REST_URL;
 
-class ProfileControllerTest extends AbstractControllerTest {
+public class ProfileControllerTest extends AbstractControllerTest {
+
+    public static final String REST_URL = ProfileController.REST_URL;
 
     @Autowired
     private UserRepository repository;
@@ -46,14 +47,14 @@ class ProfileControllerTest extends AbstractControllerTest {
 
     @Test
     void register() throws Exception {
-        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
+        UserTo newTo = getNewTo();
         User newUser = UsersUtil.createNewFromTo(newTo);
         ResultActions action = getResultActionsPost(newTo, REST_URL)
                 .andExpect(status().isCreated());
 
         User created = USER_MATCHER.readFromJson(action);
+        newUser.setId(created.id());
         int newId = created.id();
-        newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);
     }

@@ -4,6 +4,7 @@ import ru.lunchvoting.MatcherFactory;
 import ru.lunchvoting.common.util.JsonUtil;
 import ru.lunchvoting.user.model.Role;
 import ru.lunchvoting.user.model.User;
+import ru.lunchvoting.user.to.UserTo;
 
 import java.util.Collections;
 import java.util.Date;
@@ -27,6 +28,10 @@ public class UserTestData {
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.USER));
+    }
+
+    public static UserTo getNewTo() {
+        return new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
     }
 
     public static User getUpdated() {

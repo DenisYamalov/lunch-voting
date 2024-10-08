@@ -15,6 +15,7 @@ import ru.lunchvoting.restaurant.repository.VoteRepository;
 import ru.lunchvoting.user.model.User;
 import ru.lunchvoting.user.to.UserTo;
 import ru.lunchvoting.user.util.UsersUtil;
+import ru.lunchvoting.user.web.ProfileControllerTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,9 +63,9 @@ class VoteControllerTest extends AbstractControllerTest {
 
     @Test
     void vote() throws Exception {
-        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
+        UserTo newTo = getNewTo();
         User newUser = UsersUtil.createNewFromTo(newTo);
-        ResultActions action = getResultActionsPost(newTo, "/api/profile");
+        ResultActions action = getResultActionsPost(newTo, ProfileControllerTest.REST_URL);
         User created = USER_MATCHER.readFromJson(action);
         newUser.setId(created.getId());
 
