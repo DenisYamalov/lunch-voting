@@ -6,14 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.*;
 import ru.lunchvoting.restaurant.model.Restaurant;
 import ru.lunchvoting.restaurant.repository.RestaurantRepository;
+import ru.lunchvoting.restaurant.to.RestaurantWithDishesTo;
+import ru.lunchvoting.restaurant.util.RestaurantUtil;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -40,5 +42,15 @@ public class RestaurantController {
     public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
         return restaurantRepository.getExisted(id);
+    }
+
+    @GetMapping("/with-dishes")
+    @Operation(summary = "Get restaurants with dishes")
+    public List<RestaurantWithDishesTo> getWithDishes(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("get restaurants with dishes");
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        return RestaurantUtil.toWithDishes(restaurantRepository.getRestaurantsWithDishes(date));
     }
 }

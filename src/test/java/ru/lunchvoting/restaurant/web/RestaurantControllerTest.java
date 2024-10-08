@@ -3,6 +3,7 @@ package ru.lunchvoting.restaurant.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithUserDetails;
 import ru.lunchvoting.AbstractControllerTest;
+import ru.lunchvoting.restaurant.RestaurantTestData;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.lunchvoting.restaurant.RestaurantTestData.*;
@@ -40,5 +41,13 @@ class RestaurantControllerTest extends AbstractControllerTest {
         getResultActionsGet(RESTAURANT_URL)
                 .andExpect(status().isOk())
                 .andExpect(RESTAURANT_MATCHER.contentJson(KFC, MCDONALDS, BURGERKING));
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void getWithDishes() throws Exception {
+        getResultActionsGet(RESTAURANT_URL_SLASH + "/with-dishes")
+                .andExpect(status().isOk())
+                .andExpect(RESTAURANT_WITH_DISHES_TO_MATCHER.contentJson(RestaurantTestData.getWithDishes()));
     }
 }
