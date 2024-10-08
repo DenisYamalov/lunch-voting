@@ -3,9 +3,11 @@ package ru.lunchvoting.restaurant.web;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -44,13 +46,15 @@ public class VoteController {
     /**
      * @return restaurant id
      */
-    @GetMapping("/today")
+    @GetMapping("/by-date")
     @Operation(summary = "Get vote",
-            description = "Get voted restaurant id")
-    public VoteTo getVote(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get vote for user id = {}", authUser.id());
-        Vote existed = repository.findByUserIdAndVoteDate(authUser.id(), LocalDate.now())
-                .orElseThrow(() -> new IllegalRequestDataException("User didn't vote today"));
+            description = "Get voted restaurant id for specified date")
+    public VoteTo getVote(@AuthenticationPrincipal AuthUser authUser,
+                          @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("get vote for user id = {} on date = {}", authUser.id(), date);
+        LocalDate finalDate = date == null ? LocalDate.now() : date;
+        Vote existed = repository.findByUserIdAndVoteDate(authUser.id(), finalDate)
+                .orElseThrow(() -> new IllegalRequestDataException("User didn't vote on " + finalDate));
         return VoteUtil.toVoteTo(existed);
     }
 

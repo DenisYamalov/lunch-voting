@@ -40,7 +40,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getVoteToday() throws Exception {
-        getResultActionsGet(VOTE_URL + "/today")
+        getResultActionsGet(VOTE_URL + "/by-date")
                 .andExpect(status().isOk())
                 .andExpect(VOTE_TO_MATCHER.contentJson(USER_VOTE_TO));
     }
