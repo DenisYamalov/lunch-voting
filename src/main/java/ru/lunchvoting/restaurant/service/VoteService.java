@@ -1,6 +1,7 @@
 package ru.lunchvoting.restaurant.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.error.IllegalRequestDataException;
@@ -16,6 +17,7 @@ import static ru.lunchvoting.common.validation.ValidationUtil.assureIdConsistent
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class VoteService {
 
     private VoteRepository repository;
@@ -34,7 +36,6 @@ public class VoteService {
     public void update(AuthUser authUser, int restaurantId, int id) {
         Optional<Vote> voteFromRepo = getVoteFromRepo(authUser);
         if (voteFromRepo.isPresent()) {
-
             Vote vote = voteFromRepo.get();
             assureIdConsistent(vote, id);
             LocalDate today = LocalDate.now();
@@ -50,6 +51,7 @@ public class VoteService {
 
     private Vote save(Vote vote, int restaurantId) {
         vote.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
+        log.info("save vote = {}", vote);
         return repository.save(vote);
     }
 

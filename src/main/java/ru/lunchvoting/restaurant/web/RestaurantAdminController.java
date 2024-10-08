@@ -46,6 +46,7 @@ public class RestaurantAdminController {
         log.info("create {}", restaurant);
         checkNew(restaurant);
         Restaurant created = restaurantRepository.save(restaurant);
+        log.info("created new {}", created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(RESTAURANT_ADMIN_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

@@ -56,6 +56,7 @@ public class DishAdminController {
         checkNew(dishTo);
         Dish dish = DishUtil.createNewFromTo(dishTo, restaurantRepository.getExisted(restaurantId));
         Dish created = dishRepository.save(dish);
+        log.info("Created new {}", created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(DISH_ADMIN_URL + "/{id}")
                 .buildAndExpand(restaurantId, created.getId()).toUri();

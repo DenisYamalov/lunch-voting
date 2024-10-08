@@ -70,8 +70,8 @@ public class VoteController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Vote> vote(@AuthenticationPrincipal AuthUser authUser, @RequestBody int restaurantId) {
         log.info("user id = {} voting for restaurant id = {}", authUser.id(), restaurantId);
-
         Vote created = service.create(authUser, restaurantId);
+        log.info("created new {}", created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(VOTE_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

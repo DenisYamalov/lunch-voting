@@ -45,6 +45,7 @@ public class DishController {
         log.info("Get dishes for restaurant {} by date {}", restaurantId, date);
         if (date == null) {
             date = LocalDate.now();
+            log.info("Set today date");
         }
         return dishRepository.getAllByRestaurantIdAndMenuDate(restaurantId, date);
     }

@@ -32,6 +32,7 @@ public class RestaurantController {
     @Operation(summary = "Get list of restaurants")
     @Cacheable("allRestaurants")
     public List<Restaurant> getAll() {
+        log.info("get all restaurants");
         return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
@@ -40,16 +41,17 @@ public class RestaurantController {
             description = "Get restaurant by id")
     @Cacheable(key = "#id")
     public Restaurant get(@PathVariable int id) {
-        log.info("get {}", id);
+        log.info("get restaurant with id={}", id);
         return restaurantRepository.getExisted(id);
     }
 
     @GetMapping("/with-dishes")
     @Operation(summary = "Get restaurants with dishes")
     public List<RestaurantWithDishesTo> getWithDishes(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("get restaurants with dishes");
+        log.info("get restaurants with dishes for date={}", date);
         if (date == null) {
             date = LocalDate.now();
+            log.info("set today date");
         }
         return RestaurantUtil.toWithDishes(restaurantRepository.getRestaurantsWithDishes(date));
     }
