@@ -33,7 +33,10 @@ public class RestaurantAdminController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete restaurant")
-    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(key = "#id")})
+    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(key = "#id"),
+            @CacheEvict(cacheNames = "allRestaurantsWithDishes", allEntries = true),
+            @CacheEvict(cacheNames = "allDishesByDate", allEntries = true),
+            @CacheEvict(cacheNames = "allDishes", key = "#id")})
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         restaurantRepository.deleteExisted(id);
@@ -41,7 +44,10 @@ public class RestaurantAdminController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create restaurant")
-    @CacheEvict(cacheNames = "allRestaurants", allEntries = true)
+    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true),
+            @CacheEvict(cacheNames = "allRestaurantsWithDishes", allEntries = true),
+            @CacheEvict(cacheNames = "allDishesByDate", allEntries = true),
+            @CacheEvict(cacheNames = "allDishes", key = "#restaurant.id")})
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);
@@ -57,7 +63,8 @@ public class RestaurantAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update restaurant",
             description = "Update restaurant with specified id")
-    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(key = "#id")})
+    @Caching(evict = {@CacheEvict(cacheNames = "allRestaurants", allEntries = true), @CacheEvict(key = "#id"),
+            @CacheEvict(cacheNames = "allRestaurantsWithDishes", allEntries = true)})
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);

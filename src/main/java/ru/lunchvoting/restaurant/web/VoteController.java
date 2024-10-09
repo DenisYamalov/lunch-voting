@@ -1,6 +1,7 @@
 package ru.lunchvoting.restaurant.web;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -80,13 +81,13 @@ public class VoteController {
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Update vote for restaurant",
-            description = "Update vote with id")
+            description = "Update vote with id = {id}, request body should contain new restaurant id")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateVote(@AuthenticationPrincipal AuthUser authUser,
-                           @RequestBody int restaurantId,
-                           @PathVariable int id) {
-        log.info("user id = {} updates vote, new restaurant id = {}", authUser.id(), restaurantId);
+                           @Parameter(description = "restaurant id") @RequestBody int restaurantId,
+                           @Parameter(description = "id of vote to update") @PathVariable int id) {
+        log.info("user id = {} updates vote id = {}, new restaurant id = {}", authUser.id(), id, restaurantId);
         service.update(authUser, restaurantId, id);
     }
 }

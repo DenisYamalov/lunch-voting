@@ -21,7 +21,7 @@ class VoteAdminControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getVoteResults() throws Exception {
+    void getVoteResultsByDate() throws Exception {
         perform(MockMvcRequestBuilders.get(VOTE_ADMIN_URL + "/results")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("date", LocalDate.now().toString()))
@@ -33,7 +33,7 @@ class VoteAdminControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getVoteResultsWithoutDate() throws Exception {
+    void getVoteResultsByDateWithoutDate() throws Exception {
         perform(MockMvcRequestBuilders.get(VOTE_ADMIN_URL + "/results")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -44,7 +44,7 @@ class VoteAdminControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void getVoteResultsNotAdmin() throws Exception {
+    void getVoteResultsByDateNotAdmin() throws Exception {
         perform(MockMvcRequestBuilders.get(VOTE_ADMIN_URL + "/results")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("date", LocalDate.now().toString()))

@@ -31,15 +31,17 @@ import static ru.lunchvoting.common.validation.ValidationUtil.checkNew;
 public class DishAdminController {
 
     static final String DISH_ADMIN_URL = RestaurantAdminController.RESTAURANT_ADMIN_URL + "/{restaurantId}/dishes";
-
     DishRepository dishRepository;
     RestaurantRepository restaurantRepository;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete dish",
-            description = "Delete dish with specified id for restaurant with specified id")
-    @Caching(evict = {@CacheEvict(cacheNames = "allDishes", allEntries = true), @CacheEvict(key = "#id")})
+            description = "Delete dish with specified id for restaurant with specified id, price in cents")
+    @Caching(evict = {@CacheEvict(cacheNames = "allDishes", key = "#restaurantId"),
+            @CacheEvict(cacheNames = "allDishesByDate", allEntries = true),
+            @CacheEvict(cacheNames = "allRestaurantsWithDishes", allEntries = true),
+            @CacheEvict(key = "#id")})
     public void delete(@PathVariable int id, @PathVariable int restaurantId) {
         log.info("delete {} for restaurant id = {}", id, restaurantId);
         dishRepository.getBelonged(restaurantId, id);
@@ -48,9 +50,12 @@ public class DishAdminController {
 
     @PostMapping
     @Operation(summary = "Create dish",
-            description = "Create new dish for restaurant with specified id. There could be only one dish with same " +
+            description = "Create new dish for restaurant with specified id, price in cents. There could be only one " +
+                          "dish with same " +
                           "name, price, date at one restaurant")
-    @CacheEvict(cacheNames = "allDishes", allEntries = true)
+    @Caching(evict = {@CacheEvict(cacheNames = "allDishes", key = "#restaurantId"),
+            @CacheEvict(cacheNames = "allDishesByDate", key = "{#restaurantId, #dishTo.menuDate}"),
+            @CacheEvict(cacheNames = "allRestaurantsWithDishes", allEntries = true),})
     public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody DishTo dishTo) {
         log.info("create {} for restaurant id = {}", dishTo, restaurantId);
         checkNew(dishTo);
@@ -66,8 +71,11 @@ public class DishAdminController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update dish",
-            description = "Update dish with specified id for restaurant with specified id")
-    @Caching(evict = {@CacheEvict(cacheNames = "allDishes", allEntries = true), @CacheEvict(key = "#id")})
+            description = "Update dish with specified id for restaurant with specified id, price in cents")
+    @Caching(evict = {@CacheEvict(cacheNames = "allDishes", key = "#restaurantId"),
+            @CacheEvict(cacheNames = "allDishesByDate", key = "{#restaurantId, #dishTo.menuDate}"),
+            @CacheEvict(cacheNames = "allRestaurantsWithDishes", allEntries = true),
+            @CacheEvict(key = "#id")})
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id, @PathVariable int restaurantId) {
         log.info("update {} for restaurant id = {}", dishTo, restaurantId);
         assureIdConsistent(dishTo, id);

@@ -17,9 +17,9 @@ public interface VoteRepository extends BaseRepository<Vote> {
     Optional<Vote> findByUserIdAndVoteDate(int id, LocalDate voteDate);
 
     @Query("""
-            SELECT NEW ru.lunchvoting.restaurant.to.VoteResult(v.restaurant.id, count(v.id))
+            SELECT NEW ru.lunchvoting.restaurant.to.VoteResult(v.restaurant.id, count(v.id), v.voteDate)
             FROM Vote v WHERE v.voteDate=:voteDate GROUP BY v.restaurant.id ORDER BY count(v.id) DESC""")
-    List<VoteResult> getResults(LocalDate voteDate);
+    List<VoteResult> getResultsByDate(LocalDate voteDate);
 
     List<Vote> findAllByUserId(int userId);
 

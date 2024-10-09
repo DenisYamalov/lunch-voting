@@ -28,13 +28,13 @@ public class VoteAdminController {
     @GetMapping("/results")
     @Operation(summary = "Get vote results",
             description = "Get vote count for each restaurant on specified date")
-    public List<VoteResult> getVoteResults(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<VoteResult> getVoteResultsByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get vote results with date = {}", date);
         if (date == null) {
             date = LocalDate.now();
             log.info("set today date");
         }
-        List<VoteResult> results = repository.getResults(date);
+        List<VoteResult> results = repository.getResultsByDate(date);
         log.info("get vote results = {}", results);
         return results;
     }

@@ -3,6 +3,7 @@ package ru.lunchvoting.app.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,9 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 @Slf4j
 @EnableCaching
 @EnableScheduling
+@AllArgsConstructor
 public class AppConfig {
+    CacheManager cacheManager;
 
     @Profile("!test")
     @Bean(initMethod = "start", destroyMethod = "stop")
@@ -38,6 +41,7 @@ public class AppConfig {
     //   https://stackoverflow.com/a/74630129/548473
     @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = ANY)
     interface MixIn extends ProblemDetailJacksonMixin {
+
     }
 
     @Autowired
@@ -48,11 +52,10 @@ public class AppConfig {
         JsonUtil.setMapper(objectMapper);
     }
 
-    @Autowired
     @Scheduled(cron = "@daily")
-    void evictAllCaches(CacheManager cacheManager) {
+    void evictAllCaches() {
         cacheManager.getCacheNames().stream()
+                .filter(cacheName -> cacheManager.getCache(cacheName) != null)
                 .forEach(cacheName -> cacheManager.getCache(cacheName).clear());
     }
-
 }

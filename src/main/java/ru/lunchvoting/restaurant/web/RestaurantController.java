@@ -46,8 +46,10 @@ public class RestaurantController {
     }
 
     @GetMapping("/with-dishes")
-    @Operation(summary = "Get restaurants with dishes")
-    public List<RestaurantWithDishesTo> getWithDishes(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    @Operation(summary = "Get restaurants with dishes, price in cents")
+    @Cacheable(value = "allRestaurantsWithDishes", key = "#date == null ? T(java.time.LocalDate).now() : #date")
+    public List<RestaurantWithDishesTo> getWithDishes(@RequestParam @Nullable @DateTimeFormat(iso =
+            DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get restaurants with dishes for date={}", date);
         if (date == null) {
             date = LocalDate.now();

@@ -15,7 +15,6 @@ import ru.lunchvoting.restaurant.repository.DishRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-//TODO add price description
 @RestController
 @RequestMapping(value = DishController.DISH_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -29,8 +28,8 @@ public class DishController {
 
     @GetMapping
     @Operation(summary = "Get dishes",
-            description = "Get list of dishes for specified restaurant")
-    @Cacheable(cacheNames = "allDishes")
+            description = "Get list of dishes for specified restaurant, price in cents")
+    @Cacheable(cacheNames = "allDishes", key = "#restaurantId")
     public List<Dish> getAll(@PathVariable int restaurantId) {
         log.info("Get all dishes for restaurant {}", restaurantId);
         return dishRepository.getAllByRestaurantIdOrderByMenuDateDesc(restaurantId);
@@ -38,8 +37,10 @@ public class DishController {
 
     @GetMapping("/by-date")
     @Operation(summary = "Get dishes",
-            description = "Get list of dishes for specified restaurant")
-    @Cacheable(cacheNames = "allDishes")
+            description = "Get list of dishes for specified restaurant, price in cents")
+    //https://stackoverflow.com/a/24193252
+    @Cacheable(cacheNames = "allDishesByDate",
+            key = "{#restaurantId, #date==null? T(java.time.LocalDate).now() : #date}")
     public List<Dish> getAllByDate(@PathVariable int restaurantId,
                                    @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get dishes for restaurant {} by date {}", restaurantId, date);
@@ -52,7 +53,7 @@ public class DishController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get dish",
-            description = "Get dish by id for specified restaurant")
+            description = "Get dish by id for specified restaurant, price in cents")
     @Cacheable(key = "#id")
     public Dish get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("Get dish {} for restaurant {}", id, restaurantId);
