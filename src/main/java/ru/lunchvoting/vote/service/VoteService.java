@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.error.IllegalRequestDataException;
-import ru.lunchvoting.vote.model.Vote;
 import ru.lunchvoting.restaurant.repository.RestaurantRepository;
+import ru.lunchvoting.vote.model.Vote;
 import ru.lunchvoting.vote.repository.VoteRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static ru.lunchvoting.common.validation.ValidationUtil.assureIdConsistent;
@@ -22,8 +22,7 @@ public class VoteService {
 
     private VoteRepository repository;
     private RestaurantRepository restaurantRepository;
-    static final int VOTE_HOUR = 11;
-    static final int VOTE_MIN = 0;
+    static final LocalTime DEADLINE = LocalTime.of(11, 0);
 
     public Vote create(AuthUser authUser, int restaurantId) {
         if (getVoteFromRepo(authUser).isPresent()) {
@@ -38,8 +37,7 @@ public class VoteService {
         if (voteFromRepo.isPresent()) {
             Vote vote = voteFromRepo.get();
             assureIdConsistent(vote, id);
-            LocalDate today = LocalDate.now();
-            if (LocalDateTime.now().isBefore(today.atTime(VOTE_HOUR, VOTE_MIN))) {
+            if (LocalTime.now().isBefore(DEADLINE)) {
                 save(vote, restaurantId);
             } else {
                 throw new IllegalRequestDataException("it is too late, vote can't be changed after 11:00");
