@@ -1,8 +1,8 @@
-package ru.lunchvoting.restaurant.util;
+package ru.lunchvoting.vote.util;
 
-import ru.lunchvoting.restaurant.model.Vote;
+import ru.lunchvoting.vote.model.Vote;
 import ru.lunchvoting.restaurant.to.RestaurantTo;
-import ru.lunchvoting.restaurant.to.VoteTo;
+import ru.lunchvoting.vote.to.VoteTo;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.lunchvoting.restaurant.web;
+package ru.lunchvoting.vote.web;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -11,7 +11,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.lunchvoting.AbstractControllerTest;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.util.JsonUtil;
-import ru.lunchvoting.restaurant.repository.VoteRepository;
+import ru.lunchvoting.vote.model.Vote;
+import ru.lunchvoting.vote.repository.VoteRepository;
 import ru.lunchvoting.user.model.User;
 import ru.lunchvoting.user.to.UserTo;
 import ru.lunchvoting.user.util.UsersUtil;
@@ -27,8 +28,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.lunchvoting.restaurant.RestaurantTestData.BURGERKING_ID;
-import static ru.lunchvoting.restaurant.VoteTestData.*;
-import static ru.lunchvoting.restaurant.web.VoteController.VOTE_URL;
+import static ru.lunchvoting.vote.VoteTestData.*;
+import static ru.lunchvoting.vote.web.VoteController.VOTE_URL;
 import static ru.lunchvoting.user.UserTestData.*;
 
 class VoteControllerTest extends AbstractControllerTest {
@@ -76,7 +77,8 @@ class VoteControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        assertEquals(BURGERKING_ID, repository.getExisted(newUser.getId()).getRestaurant().id());
+        Vote existed = repository.findByUserIdAndVoteDate(newUser.getId(), LocalDate.now()).get();
+        assertEquals(BURGERKING_ID, existed.getRestaurant().id());
     }
 
     @Test

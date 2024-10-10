@@ -1,11 +1,11 @@
-package ru.lunchvoting.restaurant.repository;
+package ru.lunchvoting.vote.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lunchvoting.common.BaseRepository;
 import ru.lunchvoting.common.error.DataConflictException;
-import ru.lunchvoting.restaurant.model.Vote;
-import ru.lunchvoting.restaurant.to.VoteResult;
+import ru.lunchvoting.vote.model.Vote;
+import ru.lunchvoting.vote.to.VoteResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +17,7 @@ public interface VoteRepository extends BaseRepository<Vote> {
     Optional<Vote> findByUserIdAndVoteDate(int id, LocalDate voteDate);
 
     @Query("""
-            SELECT NEW ru.lunchvoting.restaurant.to.VoteResult(v.restaurant.id, count(v.id), v.voteDate)
+            SELECT NEW ru.lunchvoting.vote.to.VoteResult(v.restaurant.id, count(v.id), v.voteDate)
             FROM Vote v WHERE v.voteDate=:voteDate GROUP BY v.restaurant.id ORDER BY count(v.id) DESC""")
     List<VoteResult> getResultsByDate(LocalDate voteDate);
 

@@ -1,10 +1,10 @@
-package ru.lunchvoting.restaurant;
+package ru.lunchvoting.vote;
 
 import ru.lunchvoting.MatcherFactory;
-import ru.lunchvoting.restaurant.model.Vote;
-import ru.lunchvoting.restaurant.to.VoteResult;
-import ru.lunchvoting.restaurant.to.VoteTo;
-import ru.lunchvoting.restaurant.util.VoteUtil;
+import ru.lunchvoting.vote.model.Vote;
+import ru.lunchvoting.vote.to.VoteResult;
+import ru.lunchvoting.vote.to.VoteTo;
+import ru.lunchvoting.vote.util.VoteUtil;
 
 import java.time.LocalDate;
 
@@ -23,8 +23,8 @@ public class VoteTestData {
     public static final int ADMIN_VOTE_ID = 2;
     public static final int SECOND_USER_VOTE_ID = 3;
 
-    public static final VoteResult VOTE_KFC_RESULT = new VoteResult(KFC_ID, 1);
-    public static final VoteResult VOTE_MCDONALDS_RESULT = new VoteResult(MCDONALDS_ID, 2);
+    public static final VoteResult VOTE_KFC_RESULT = new VoteResult(KFC_ID, 1, LocalDate.now());
+    public static final VoteResult VOTE_MCDONALDS_RESULT = new VoteResult(MCDONALDS_ID, 2, LocalDate.now());
 
     public static final Vote USER_VOTE = new Vote(USER_VOTE_ID, USER, KFC, LocalDate.now());
     public static final VoteTo USER_VOTE_TO = VoteUtil.toVoteTo(USER_VOTE);

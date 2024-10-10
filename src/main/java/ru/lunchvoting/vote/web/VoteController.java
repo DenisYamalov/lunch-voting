@@ -1,4 +1,4 @@
-package ru.lunchvoting.restaurant.web;
+package ru.lunchvoting.vote.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.lunchvoting.app.AuthUser;
 import ru.lunchvoting.common.error.IllegalRequestDataException;
-import ru.lunchvoting.restaurant.model.Vote;
-import ru.lunchvoting.restaurant.repository.VoteRepository;
-import ru.lunchvoting.restaurant.service.VoteService;
-import ru.lunchvoting.restaurant.to.VoteTo;
-import ru.lunchvoting.restaurant.util.VoteUtil;
+import ru.lunchvoting.vote.model.Vote;
+import ru.lunchvoting.vote.repository.VoteRepository;
+import ru.lunchvoting.vote.service.VoteService;
+import ru.lunchvoting.vote.to.VoteTo;
+import ru.lunchvoting.vote.util.VoteUtil;
 
 import java.net.URI;
 import java.time.LocalDate;

@@ -1,9 +1,10 @@
-package ru.lunchvoting.restaurant.model;
+package ru.lunchvoting.vote.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ru.lunchvoting.common.model.BaseEntity;
+import ru.lunchvoting.restaurant.model.Restaurant;
 import ru.lunchvoting.user.model.User;
 
 import java.time.LocalDate;
