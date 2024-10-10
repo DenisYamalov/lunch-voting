@@ -5,7 +5,7 @@ REST Api for lunch voting
 
 [Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
 
-Based on _Spring Boot, SpringDataJpa(Hibernate as JPA provider), db - H2, Spring Security, JackSon, Spring Cache (caffeine), Junit, Mockito_
+Based on _Spring Boot, SpringDataJpa(Hibernate as JPA provider), db - H2, Spring Security, JackSon, Spring Cache (Caffeine), Junit, Mockito_
 
 
 Technical requirement:
